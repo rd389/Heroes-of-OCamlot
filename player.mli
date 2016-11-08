@@ -1,3 +1,5 @@
+open Game
+
 (* A [Player] runs each phase of a player's turn *)
 module type Player = sig
   (* whether or not the player is a human *)
