@@ -10,19 +10,22 @@ type target = All | Me | Them | Mine | Theirs | Any
 type minion = {
   attack : int ref;
   hp : int ref;
-  bonus : (min_effect * int) list
+  bonus : (min_effect * int) list;
+  cost : int
 }
 (* the type of a card from the Spell class *)
 type spell = {
   target : target;
   effect : sp_effect;
-  mag : int
+  mag : int;
+  cost : int
 }
 (* the type of a card from the Weapon class*)
 type weapon = {
   dmg : int;
   armor : int;
   durability : int ref;
+  cost : int
 }
 (* the different classes that a card can be *)
 type typ = Minion of minion | Spell of spell | Weapon of weapon
@@ -36,19 +39,19 @@ type card = {
 type hero = {
   hp : int ref;
   attack : int ref;
-  armor : int ref
+  armor : int ref;
+  hand : card list;
+  deck : card list;
+  minions: miniion list;
 }
 (* the game state, which can be altered by Player functions during each phase
   of each player's turn*)
 type state = {
   turn : int;
   which_player : int ref;
-  players : hero list;
-  hands : (card list) list;
-  deck : (card list) list;
-  minions : (minion list) list
+  players : (hero ref) list;
 }
-(* [deck_builder f] parses through the .json file at specified by f in order to
+(* [deck_builder f] parses through the .json file specified by f in order to
   build a deck (card list) from the information in the file *)
 val deck_builder : string -> card list
 (* [play p1 p2] is what actually runs the game, turn by turn for each Player,
