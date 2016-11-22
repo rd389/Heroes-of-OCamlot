@@ -38,7 +38,7 @@ type hero = {
   armor : int ref;
   hand : card list;
   deck : card list;
-  minions: miniion list;
+  minions: minion list;
 }
 
 type state = {
