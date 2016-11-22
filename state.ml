@@ -29,7 +29,7 @@ type typ = Minion of minion | Spell of spell | Weapon of weapon
 
 type card = {
   name : string;
-  class : typ
+  cat : typ
 }
 
 type hero = {

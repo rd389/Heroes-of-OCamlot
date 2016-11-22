@@ -25,12 +25,12 @@ type weapon = {
   durability : int ref;
   cost : int
 }
-(* the different classes that a card can be *)
+(* the different categories that a card can be *)
 type typ = Minion of minion | Spell of spell | Weapon of weapon
 (* the type of a card *)
 type card = {
   name : string;
-  class : typ
+  cat : typ
 }
 (* the status of player's hero, which can be altered by minions, spells, or
   weapon cards *)
@@ -40,7 +40,7 @@ type hero = {
   armor : int ref;
   hand : card list;
   deck : card list;
-  minions: miniion list;
+  minions: minion list;
 }
 (* the game state, which can be altered by Player functions during each phase
   of each player's turn*)

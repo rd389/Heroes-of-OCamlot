@@ -1,5 +1,5 @@
+open Players
 open State
-
 exception Unimplemented
 
 (* [deck_builder f] parses through the .json file specified by f in order to
@@ -7,4 +7,4 @@ exception Unimplemented
 val deck_builder : string -> card list
 (* [play p1 p2] is what actually runs the game, turn by turn for each Player,
   until one of the players quits or loses *)
-val play : (module P1 : Player) -> (module P2 : Player) -> unit
+val play : (module Players.Player) -> (module Players.Player) -> unit
