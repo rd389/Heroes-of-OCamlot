@@ -5,5 +5,5 @@ exception Unimplemented
 let deck_builder filename =
   raise Unimplemented
 
-let play p1 p2 =
+let play (module P1 : Player) (module P2 : Player) =
   raise Unimplemented
