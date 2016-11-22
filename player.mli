@@ -1,4 +1,6 @@
-open Game
+open State
+
+exception Unimplemented
 
 (* A [Player] runs each phase of a player's turn *)
 module type Player = sig
