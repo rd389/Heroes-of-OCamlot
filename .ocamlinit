@@ -1,0 +1,10 @@
+#directory "_build";;
+#load "players.cmo";;
+#load "state.cmo";;
+#load "main.cmo";;
+#load "game.cmo";;
+
+open Players
+open Game
+open State
+open Main
