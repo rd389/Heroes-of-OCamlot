@@ -6,8 +6,6 @@ type sp_effect = Heal | Dmg | Buff | Mana
 type target = All | Me | Them | Mine | Theirs | Any
 (* the type of a card from the Minion class *)
 type minion = {
-  name : string;
-  desc : string;
   attack : int ref;
   hp : int ref;
   bonus : (min_effect * int) list;
@@ -15,8 +13,6 @@ type minion = {
 }
 (* the type of a card from the Spell class *)
 type spell = {
-  name : string;
-  desc : string;
   target : target;
   effect : sp_effect;
   mag : int;
@@ -24,10 +20,7 @@ type spell = {
 }
 (* the type of a card from the Weapon class*)
 type weapon = {
-  name : string;
-  desc : string;
   dmg : int;
-  armor : int;
   durability : int ref;
   cost : int
 }
@@ -36,6 +29,7 @@ type typ = Minion of minion | Spell of spell | Weapon of weapon
 (* the type of a card *)
 type card = {
   name : string;
+  desc : string;
   cat : typ
 }
 (* the status of player's hero, which can be altered by minions, spells, or

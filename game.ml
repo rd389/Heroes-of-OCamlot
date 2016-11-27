@@ -3,7 +3,7 @@ open State
 open Yojson.Basic.Util
 exception Unimplemented
 
-(* get_int k j] is the int associated with the value mapped to key [k] in
+(* [get_int k j] is the int associated with the value mapped to key [k] in
  * JSON object j. *)
 let get_int k j =
   j |> member k |> to_int
@@ -18,14 +18,53 @@ let get_string k j =
 let get_list k j =
   j |> member k |> to_list
 
+let build_bonus j =
+  let eff = match get_string "effect" j with
+            | "armor" -> Armor | "heal" -> Heal | "attack" -> Attack
+            | _ -> failwith "Invalid minion bonus effect" in
+  (eff, get_int "amount" j)
+
 let build_minion j =
-  raise Unimplemented
+  let min = { attack = ref (get_int "attack" j);
+  hp = ref (get_int "health" j);
+  bonus = get_list "bonus" j |> List.map build_bonus;
+  cost = get_int "cost" j;
+  } in
+
+  { name = get_string "name" j;
+  desc = get_string "desc" j;
+  cat = Minion min
+  }
 
 let build_spell j =
-  raise Unimplemented
+  let targ = match get_string "targ" j with
+             | "all" -> All | "me" -> Me | "them" -> Them
+             | "mine" -> Mine | "theirs" -> Theirs | "any" -> Any
+             | _ -> failwith "Invalid target" in
+  let eff = match get_string "effect" j with
+            | "heal" -> Heal | "dmg" -> Dmg | "buff" -> Buff | "mana" -> Mana
+            | _ -> failwith "Invalid spell effect" in
+  let sp = { target = targ;
+    effect = eff;
+    mag = get_int "mag" j;
+    cost = get_int "cost" j;
+    } in
+
+  { name = get_string "name" j;
+  desc = get_string "desc" j;
+  cat = Spell sp;
+  }
 
 let build_weapon j =
-  raise Unimplemented
+  let weapon = { dmg = get_int "dmg" j;
+  durability = ref (get_int "dur" j);
+  cost = get_int "cost" j;
+  } in
+
+  {name = get_string "name" j;
+  desc = get_string "desc" j;
+  cat = Weapon weapon;
+  }
 
 let shuffle deck =
   let nd = List.map (fun c -> (Random.bits (), c)) deck in
