@@ -1,0 +1,58 @@
+{
+  "type": "object",
+  "properties": {
+    "minions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "desc": { "type": "string" },
+          "cost": { "type": "integer" },
+          "attack": { "type": "integer" },
+          "health": { "type": "integer" },
+          "bonus" : {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "effect": "string",
+                "amount": "integer"
+              }
+            }
+          }
+        },
+        "required": [ "name", "desc", "cost", "attack", "health" ]
+      },
+    },
+    "spells": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "desc": { "type": "string" },
+          "cost": { "type": "integer" },
+          "targ": { "type": "string" },
+          "effect": { "type": "string" },
+          "mag": { "type": "integer" }
+        },
+        "required": [ "name", "desc", "cost", "targ", "effect", "mag" ]
+      }
+    },
+    "weapons": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties":{
+          "name": { "type": "string" },
+          "desc": { "type": "string" },
+          "cost": { "type": "integer" },
+          "dmg": {"type": "integer" },
+          "dur": {"type": "integer" }
+        },
+        "required": [ "name", "desc", "cost", "dmg", "dur" ]
+      }
+    }
+  }
+}
