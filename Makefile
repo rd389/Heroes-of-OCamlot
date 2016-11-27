@@ -1,5 +1,5 @@
 main:
-	ocamlbuild -pkgs oUnit,ANSITerminal main.byte
+	ocamlbuild -pkgs oUnit,yojson,ANSITerminal main.byte
 
 clean:
 	ocamlbuild -clean

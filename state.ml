@@ -5,6 +5,8 @@ type sp_effect = Heal | Dmg | Buff | Mana
 type target = All | Me | Them | Mine | Theirs | Any
 
 type minion = {
+  name : string;
+  desc : string;
   attack : int ref;
   hp : int ref;
   bonus : (min_effect * int) list;
@@ -12,6 +14,8 @@ type minion = {
 }
 
 type spell = {
+  name : string;
+  desc : string;
   target : target;
   effect : sp_effect;
   mag : int;
@@ -19,6 +23,8 @@ type spell = {
 }
 
 type weapon = {
+  name : string;
+  desc : string;
   dmg : int;
   armor : int;
   durability : int ref;
