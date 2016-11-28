@@ -8,7 +8,7 @@ module type Player = sig
   (* whether or not the player is a human *)
   val is_human : bool
   (* the player number that this player is in the game state *)
-  val draw_card : state -> state
+  val draw_card : hero -> hero
   (* [start_turn st] returns the game state after the start of a turn *)
   val start_turn : state -> state
   (* [pre_phase st] returns the game state after the player's pre-phase *)

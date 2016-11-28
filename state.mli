@@ -39,7 +39,7 @@ type hero = {
   armor : int;
   hand : card list;
   deck : card list;
-  minions: card list
+  minions : card list;
 }
 (* the game state, which can be altered by Player functions during each phase
   of each player's turn*)
@@ -48,3 +48,7 @@ type state = {
   first_player : bool;
   players : hero * hero;
 }
+
+val print_card : card -> unit
+val print_card_list : card list -> unit
+val print_state : state -> unit
