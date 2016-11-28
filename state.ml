@@ -5,8 +5,8 @@ type sp_effect = Heal | Dmg | Buff | Mana
 type target = All | Me | Them | Mine | Theirs | Any
 
 type minion = {
-  mutable attack : int;
-  mutable hp : int;
+  attack : int;
+  hp : int;
   bonus : (min_effect * int) list;
   cost : int
 }
@@ -20,7 +20,7 @@ type spell = {
 
 type weapon = {
   dmg : int;
-  mutable durability : int;
+  durability : int;
   cost : int
 }
 
@@ -33,9 +33,9 @@ type card = {
 }
 
 type hero = {
-  mutable hp : int;
-  mutable attack : int;
-  mutable armor : int;
+  hp : int;
+  attack : int;
+  armor : int;
   hand : card list;
   deck : card list;
   in_play : card list;
@@ -44,6 +44,6 @@ type hero = {
 
 type state = {
   turn : int;
-  mutable which_player : int;
-  players : hero list;
+  first_player : bool;
+  players : hero * hero;
 }

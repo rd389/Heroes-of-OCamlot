@@ -83,6 +83,33 @@ let deck_builder filename =
   let deck = minions@spells@weapons in
   shuffle deck
 
-
 let play (module P1 : Player) (module P2 : Player) =
-  raise Unimplemented
+  let deck1 () =
+    print_endline "Player 1: Please enter a deck file:";
+    print_string "> ";
+    read_line () |> deck_builder in
+  let deck2 () =
+    ( if P2.is_human then print_endline "Player 2: Please enter a deck file:"
+      else "Please enter the AI's deck file:" );
+    print_string "> ";
+    read_line () |> deck_builder in
+  let hero1 () =
+    {hp = 30; attack = 0; armor = 0; hand = [];
+      deck = deck1 (); minions = []} in
+  let hero2 () =
+    {hp = 30; attack = 0; armor = 0; hand = [];
+      deck = deck2 (); minions = []} in
+  let start_state () =
+    {turn = 0; which_player = 0; (hero1 (), hero2 ())} in
+  let rec play_game st =
+    try (
+      ( if st.first_player then
+          P1.pre_phase |> P1.attack_phase |> P1.post_phase |> P1.end_turn
+        else P2.pre_phase |> P2.attack_phase |> P2. post_phase |> P2. end_turn )
+      |> play_game )
+    with _ -> st
+  let end_game st =
+    if st.first_player then
+      print_endline "Player 1 wins! \nThank you for playing! Goodbye."
+    else print_endline "Player 2 wins! \n Thank you for playing! Goodbye."
+  start_state () |> play_game |> end_game
