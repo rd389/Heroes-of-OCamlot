@@ -38,6 +38,7 @@ type hero = {
   armor : int ref;
   hand : card list;
   deck : card list;
+  in_play : card list;
   minions: minion list;
 }
 

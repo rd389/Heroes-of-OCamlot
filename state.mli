@@ -40,6 +40,7 @@ type hero = {
   armor : int ref;
   hand : card list;
   deck : card list;
+  in_play : card list;
   minions: minion list;
 }
 (* the game state, which can be altered by Player functions during each phase
