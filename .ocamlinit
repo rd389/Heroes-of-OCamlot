@@ -1,5 +1,5 @@
 #directory "_build";;
-#load "state.cmo"
+#load "state.cmo";;
 #load "players.cmo";;
 #load "game.cmo";;
 

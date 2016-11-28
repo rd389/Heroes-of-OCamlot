@@ -8,7 +8,7 @@ let rec run_game () =
   | "1" -> Game.play (module HumanPlayer) (module HumanPlayer)
   | "2" -> Game.play (module HumanPlayer) (module AIPlayer)
   | "3" -> print_endline "Goodbye!"
-  | _ -> print_endline "Try again."; run_game()
+  | _ -> print_endline "Ritwik likes Bigdick"; run_game()
 
 let () =
   print_endline "\n\nWelcome to the Heroes of OCamlot game engine.\n";
