@@ -25,8 +25,8 @@ let build_bonus j =
   (eff, get_int "amount" j)
 
 let build_minion j =
-  let min = { attack = ref (get_int "attack" j);
-  hp = ref (get_int "health" j);
+  let min = { attack =  (get_int "attack" j);
+  hp =  (get_int "health" j);
   bonus = get_list "bonus" j |> List.map build_bonus;
   cost = get_int "cost" j;
   } in
@@ -57,7 +57,7 @@ let build_spell j =
 
 let build_weapon j =
   let weapon = { dmg = get_int "dmg" j;
-  durability = ref (get_int "dur" j);
+  durability =  (get_int "dur" j);
   cost = get_int "cost" j;
   } in
 
