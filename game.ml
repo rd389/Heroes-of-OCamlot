@@ -28,11 +28,11 @@ let build_minion j =
   let min = { attack =  (get_int "attack" j);
   hp =  (get_int "health" j);
   bonus = get_list "bonus" j |> List.map build_bonus;
-  cost = get_int "cost" j;
   } in
 
   { name = get_string "name" j;
   desc = get_string "desc" j;
+  cost = get_int "cost" j;
   cat = Minion min
   }
 
@@ -47,22 +47,22 @@ let build_spell j =
   let sp = { target = targ;
     effect = eff;
     mag = get_int "mag" j;
-    cost = get_int "cost" j;
     } in
 
   { name = get_string "name" j;
   desc = get_string "desc" j;
+  cost = get_int "cost" j;
   cat = Spell sp;
   }
 
 let build_weapon j =
   let weapon = { dmg = get_int "dmg" j;
   durability =  (get_int "dur" j);
-  cost = get_int "cost" j;
   } in
 
   {name = get_string "name" j;
   desc = get_string "desc" j;
+  cost = get_int "cost" j;
   cat = Weapon weapon;
   }
 
@@ -94,10 +94,10 @@ let play (module P1 : Player) (module P2 : Player) =
     print_string "> ";
     read_line () |> deck_builder in
   let hero1 () =
-    {hp = 30; mana = 0; attack = 0; armor = 0; hand = [];
+    {hp = 30; mana = 0; weap = None; armor = 0; hand = [];
       deck = deck1 (); minions = []} in
   let hero2 () =
-    {hp = 30; mana = 0; attack = 0; armor = 0; hand = [];
+    {hp = 30; mana = 0; weap = None; armor = 0; hand = [];
       deck = deck2 (); minions = []} in
   let start_state () =
     {turn = 0; first_player = true; players = (hero1 (), hero2 ())} in

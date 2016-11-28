@@ -7,21 +7,18 @@ type target = All | Me | Them | Mine | Theirs | Any
 type minion = {
   attack : int;
   hp : int;
-  bonus : (min_effect * int) list;
-  cost : int
+  bonus : (min_effect * int) list
 }
 
 type spell = {
   target : target;
   effect : sp_effect;
-  mag : int;
-  cost : int
+  mag : int
 }
 
 type weapon = {
   dmg : int;
-  durability : int;
-  cost : int
+  durability : int
 }
 
 type typ = Minion of minion | Spell of spell | Weapon of weapon
@@ -29,18 +26,18 @@ type typ = Minion of minion | Spell of spell | Weapon of weapon
 type card = {
   name : string;
   desc : string;
+  cost : int;
   cat : typ
 }
 
 type hero = {
   hp : int;
-  weap : weapon
-  attack : int;
+  mana : int;
+  weap : card option;
   armor : int;
   hand : card list;
   deck : card list;
-  in_play : card list;
-  minions: minion list;
+  minions: card list
 }
 
 type state = {

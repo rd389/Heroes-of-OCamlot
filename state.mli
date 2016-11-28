@@ -8,21 +8,18 @@ type target = All | Me | Them | Mine | Theirs | Any
 type minion = {
   attack : int;
   hp : int;
-  bonus : (min_effect * int) list;
-  cost : int
+  bonus : (min_effect * int) list
 }
 (* the type of a card from the Spell class *)
 type spell = {
   target : target;
   effect : sp_effect;
-  mag : int;
-  cost : int
+  mag : int
 }
 (* the type of a card from the Weapon class*)
 type weapon = {
   dmg : int;
   durability : int;
-  cost : int
 }
 (* the different categories that a card can be *)
 type typ = Minion of minion | Spell of spell | Weapon of weapon
@@ -30,18 +27,19 @@ type typ = Minion of minion | Spell of spell | Weapon of weapon
 type card = {
   name : string;
   desc : string;
+  cost : int;
   cat : typ
 }
 (* the status of player's hero, which can be altered by minions, spells, or
   weapon cards *)
 type hero = {
   hp : int;
-  attack : int;
+  mana : int;
+  weap : card option;
   armor : int;
   hand : card list;
   deck : card list;
-  in_play : card list;
-  minions: minion list;
+  minions: card list
 }
 (* the game state, which can be altered by Player functions during each phase
   of each player's turn*)
