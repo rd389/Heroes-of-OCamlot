@@ -28,17 +28,27 @@ struct
       print_card card; new_plyr
     else let () = print_endline "nothing. The deck is empty." in plyr
 
+  let replenish_mana st =
+    let player = match st.first_player with
+                 | true -> fst st.players
+                 | false -> snd st.players in
+    let new_player = if st.turn > 10 then {player with mana = 10}
+                     else {player with mana = st.turn} in
+    if st.first_player then {st with players = (new_player, snd st.players)}
+    else {st with players = (fst st.players, new_player)}
+
   let start_turn st =
-    let (plyr1, plyr2) = st.players in
-    let new_plyrs = if st.first_player
+    let start_state = replenish_mana st in
+    let (plyr1, plyr2) = start_state.players in
+    let new_plyrs = if start_state.first_player
                     then (plyr1 |> draw_card, plyr2)
                     else (plyr1, plyr2 |> draw_card) in
-    let new_st = {st with players = new_plyrs} in
+    let new_st = {start_state with players = new_plyrs} in
     new_st |> print_state; new_st
 
   let end_turn st =
     match st.first_player with
-    | true -> {st with turn = st.turn+1; first_player = false}
+    | true -> {st with first_player = false}
     | false -> {st with turn = st.turn+1; first_player = true}
 
   let rec pick_card p =
@@ -67,6 +77,7 @@ struct
                    minions = new_mins} )
 
   let pre_phase st =
+    print_state st;
     let pre_st = start_turn st in
     let player = match pre_st.first_player with
                  | true -> fst pre_st.players
@@ -80,13 +91,15 @@ struct
       | _ -> print_endline "Command not understood. Type yes or no."; play_card p
     in
     let new_player = play_card player in
-    if st.first_player then {st with players = (new_player, snd st.players)}
-    else {st with players = (fst st.players, new_player)}
+    if pre_st.first_player then
+    {pre_st with players = (new_player, snd pre_st.players)}
+    else {pre_st with players = (fst pre_st.players, new_player)}
 
   let attack_phase st =
     raise Unimplemented
 
   let post_phase st =
+    print_state st;
     let player = match st.first_player with
                  | true -> fst st.players
                  | false -> snd st.players in
