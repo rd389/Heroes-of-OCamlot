@@ -1,6 +1,6 @@
 type min_effect = Armor | Heal | Attack
 
-type sp_effect = Heal | Dmg | Buff | Mana
+type sp_effect = Heal | Dmg | Mana
 
 type target = All | Me | Them | Mine | Theirs | Any
 

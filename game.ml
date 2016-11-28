@@ -30,7 +30,7 @@ let deck_builder filename =
                | "mine" -> Mine | "theirs" -> Theirs | "any" -> Any
                | _ -> failwith "Invalid target" in
     let eff = match get_string "effect" j with
-              | "heal" -> Heal | "dmg" -> Dmg | "buff" -> Buff | "mana" -> Mana
+              | "heal" -> Heal | "dmg" -> Dmg | "mana" -> Mana
               | _ -> failwith "Invalid spell effect" in
     let sp = { target = targ; effect = eff; mag = get_int "mag" j} in
     {name = get_string "name" j;desc = get_string "desc" j;

@@ -1,7 +1,7 @@
 (* the different possible effects for a minion card *)
 type min_effect = Armor | Heal | Attack
 (* the different possible effects for a spell card *)
-type sp_effect = Heal | Dmg | Buff | Mana
+type sp_effect = Heal | Dmg | Mana
 (* the different possible target(s) for a spell card *)
 type target = All | Me | Them | Mine | Theirs | Any
 (* the type of a card from the Minion class *)
