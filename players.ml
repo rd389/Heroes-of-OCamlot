@@ -1,6 +1,7 @@
 open State
 
 exception Unimplemented
+exception GameOver
 
 module type Player = sig
   val is_human : bool
