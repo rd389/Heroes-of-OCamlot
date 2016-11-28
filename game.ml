@@ -78,7 +78,7 @@ let play (module P1 : Player) (module P2 : Player) =
     try (
       ( if st.first_player then
           st |> P1.pre_phase |> P1.attack_phase |> P1.post_phase
-        else st |> P2.pre_phase |> P2.attack_phase |> P2. post_phase )
+        else st |> P2.pre_phase |> P2.attack_phase |> P2.post_phase )
       |> play_game )
     with _ -> st in
   let end_game st =

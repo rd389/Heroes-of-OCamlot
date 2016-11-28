@@ -1,0 +1,28 @@
+{
+  "minions" : [{
+    "name" : "Meyers",
+    "desc" : "1 attack; 21 HP; +2 armor.",
+    "cost" : 2,
+    "attack" : 1,
+    "health" : 21,
+    "bonus" : [{
+      "effect" : "armor",
+      "amount" : 2
+    }]
+  }],
+  "spells" : [{
+    "name" : "Snake",
+    "desc" : "+5 mana. Oh boy.",
+    "cost" : 4,
+    "targ" : "me",
+    "effect" : "mana",
+    "mag" : 5
+  }],
+  "weapons" : [{
+    "name" : "Funnel",
+    "desc" : "3 damage; 69 durability. The name says it all.",
+    "cost" : 4,
+    "dmg" : 3,
+    "dur" : 69
+  }]
+}
