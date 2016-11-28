@@ -36,6 +36,11 @@ struct
     let new_st = {st with players = new_plyrs} in
     new_st |> print_state; new_st
 
+  let end_turn st =
+    match st.first_player with
+    | true -> {st with turn = st.turn+1; first_player = false}
+    | false -> {st with turn = st.turn+1; first_player = true}
+
   let rec pick_card p =
     let s = print_endline "Play a card in your hand"; read_line () in
     match s with
@@ -44,12 +49,13 @@ struct
            | _ -> (let () = print_endline "This card is not in your hand" in
                   pick_card p))
 
-  let choose_card p =
+  let rec choose_card p =
     let c = pick_card p in
     match c with
     | None -> p
-    | Some card -> (let new_mana = if p.mana - card.cost < 0 then 0
-                                  else p.mana - card.cost in
+    | Some card when card.cost>p.mana -> print_endline "Not enough mana to play
+                                         this card"; choose_card p
+    | Some card -> (let new_mana = p.mana - card.cost in
                    let new_weap = match card.cat with
                                   | Minion _ | Spell _ -> None
                                   | Weapon _ -> Some card in
@@ -61,7 +67,21 @@ struct
                    minions = new_mins} )
 
   let pre_phase st =
-    raise Unimplemented
+    let pre_st = start_turn st in
+    let player = match pre_st.first_player with
+                 | true -> fst pre_st.players
+                 | false -> snd pre_st.players in
+    let rec play_card p =
+      let s = print_endline "Do you want to play a card?"; read_line () in
+      match s with
+      | "no" -> p
+      | "yes" -> print_endline "(type \"end\" to stop)";
+                  (choose_card p) |> play_card
+      | _ -> print_endline "Command not understood. Type yes or no."; play_card p
+    in
+    let new_player = play_card player in
+    if st.first_player then {st with players = (new_player, snd st.players)}
+    else {st with players = (fst st.players, new_player)}
 
   let attack_phase st =
     raise Unimplemented
@@ -71,17 +91,17 @@ struct
                  | true -> fst st.players
                  | false -> snd st.players in
     let rec play_card p =
-      if p.mana>0 then (let new_p = choose_card p in play_card new_p)
-      else p
+      let s = print_endline "Do you want to play a card?"; read_line () in
+      match s with
+      | "no" -> p
+      | "yes" -> print_endline "(type \"end\" to stop)";
+                  (choose_card p) |> play_card
+      | _ -> print_endline "Command not understood. Type yes or no."; play_card p
     in
     let new_player = play_card player in
-    if st.first_player then {st with players = (new_player, snd st.players)}
-    else {st with players = (fst st.players, new_player)}
-
-  let end_turn st =
-    match st.first_player with
-    | true -> {st with first_player = false}
-    | false -> {st with first_player = true}
+    if st.first_player then
+      (end_turn {st with players = (new_player, snd st.players)})
+    else (end_turn {st with players = (fst st.players, new_player)})
 end
 
 module AIPlayer : Player =
