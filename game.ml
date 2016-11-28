@@ -66,10 +66,12 @@ let play (module P1 : Player) (module P2 : Player) =
     read_line () |> deck_builder in
   let hero1 () =
     {hp = 30; mana = 0; weap = None; armor = 0; hand = [];
-      deck = deck1; minions = []} in
+      deck = deck1; minions = []}
+      |> P1.draw_card |> P1.draw_card |> P1.draw_card in
   let hero2 () =
     {hp = 30; mana = 0; weap = None; armor = 0; hand = [];
-      deck = deck2; minions = []} in
+      deck = deck2; minions = []}
+      |> P2.draw_card |> P2.draw_card |> P2.draw_card in
   let start_state () =
     {turn = 0; first_player = true; players = (hero1 (), hero2 ())} in
   let rec play_game st =
