@@ -34,17 +34,16 @@ type card = {
 
 type hero = {
   hp : int;
-  weap : weapon
+  mana : int;
   attack : int;
   armor : int;
   hand : card list;
   deck : card list;
-  in_play : card list;
-  minions: minion list;
+  minions: minion list
 }
 
 type state = {
   turn : int;
   first_player : bool;
-  players : hero * hero;
+  players : hero * hero
 }
