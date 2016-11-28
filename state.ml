@@ -72,26 +72,22 @@ let print_state st =
   print_endline "Your hand:";
   print_card_list plyr.hand;
   print_string "Your equipped weapon: ";
-  let print_weap =
-    match plyr.weap with
-    | None -> print_endline "none";
-    | Some w -> print_card w; in
+  match plyr.weap with
+  | None -> print_endline "none";
+  | Some w -> print_card w;
   print_string "Your minions in play: ";
-  let print_minions =
-    match plyr.minions with
-    | [] -> print_endline "none";
-    | ms -> print_endline ""; print_card_list ms; in
+  match plyr.minions with
+  | [] -> print_endline "none";
+  | ms -> print_endline ""; print_card_list ms;
   print_endline "";
   print_endline "Your opponent's hand:";
   print_card_list other_plyr.hand;
   print_string "Your opponent's equipped weapon: ";
-  let print_other_weap =
-    match other_plyr.weap with
-    | None -> print_endline "none";
-    | Some w -> print_card w; in
+  match other_plyr.weap with
+  | None -> print_endline "none";
+  | Some w -> print_card w;
   print_string "Your opponent's minions in play: ";
-  let print_other_minions =
-    match other_plyr.minions with
-    | [] -> print_endline "none";
-    | ms -> print_endline ""; print_card_list ms; in
+  match other_plyr.minions with
+  | [] -> print_endline "none";
+  | ms -> print_endline ""; print_card_list ms;
   print_endline ""; ()
