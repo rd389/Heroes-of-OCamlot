@@ -51,7 +51,7 @@ let print_card c =
   | Minion _ -> "Minion"
   | Spell _ -> "Spell"
   | Weapon _ -> "Weapon" in
-  let cost = string_of_int c.cost
+  let cost = string_of_int c.cost in
   print_endline (typ ^ " : " ^ c.name ^ ", costs " ^ cost ^ " - " ^ c.desc)
 
 let rec print_card_list l =
