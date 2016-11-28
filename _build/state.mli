@@ -36,17 +36,17 @@ type card = {
   weapon cards *)
 type hero = {
   hp : int;
-  mana : int;
   attack : int;
   armor : int;
   hand : card list;
   deck : card list;
-  minions: minion list
+  in_play : card list;
+  minions: minion list;
 }
 (* the game state, which can be altered by Player functions during each phase
   of each player's turn*)
 type state = {
   turn : int;
   first_player : bool;
-  players : hero * hero
+  players : hero * hero;
 }
