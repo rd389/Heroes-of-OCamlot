@@ -64,7 +64,7 @@ let rec print_bonuses l =
   | [] -> ()
   | (eff,mag)::t -> let () = (match eff with
                     | Armor -> print_endline ("    Ar +" ^ (string_of_int mag))
-                    | Heal -> print_endline ("    Hp +" ^ (string_of_int mag))
+                    | HealM -> print_endline ("    Hp +" ^ (string_of_int mag))
                     | Attack -> print_endline ("    Att " ^ (string_of_int mag))) in
                     print_bonuses t
 
