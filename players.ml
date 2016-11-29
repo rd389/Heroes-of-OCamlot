@@ -343,8 +343,9 @@ struct
       match ms with
       | [] -> if(!hero_attack <> 0) then
                (print_string "Pick a target for your hero:\n> ";
-                get_target (!hero_attack); alter_weap ();)
-              else ( (); )
+                get_target (!hero_attack); alter_weap (); )
+              else ();
+              print_endline "Press Enter/Return"; ignore (read_line ());
       | h::t -> ( print_string ("Pick a target for your " ^
                                   (format_minion h) ^ "\n> ");
                 match h.cat with
