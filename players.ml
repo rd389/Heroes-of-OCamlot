@@ -69,27 +69,49 @@ struct
              play_spell inter_st3 {sp with target = Theirs})
     | Me -> (match sp.effect with
             | Heal -> (let new_p = {p with hp = p.hp + sp.mag} in
+                      print_endline ("You have healed! Now your health is " ^
+                                    (string_of_int new_p.hp));
                       match st.first_player with
                       | true -> {st with players = (new_p,op)}
                       | false -> {st with players = (op,new_p)})
-            | Dmg -> (let new_p = {p with hp = p.hp - sp.mag} in
+            | Dmg -> (let new_p = if p.armor=0 then {p with hp = p.hp - sp.mag}
+                                  else if p.armor-sp.mag >= 0 then
+                                    {p with armor = p.armor-sp.mag}
+                                  else let new_att = sp.mag-p.armor in
+                                    {p with armor=0; hp= p.hp - new_att}
+                                  in
+                     print_endline ("You have hurt yourself! Now your health is " ^
+                                   (string_of_int new_p.hp));
                      match st.first_player with
                      | true -> {st with players = (new_p,op)}
                      | false -> {st with players = (op,new_p)})
             | Mana -> (let new_p = {p with mana = p.mana + sp.mag} in
+                      print_endline ("You boosted your mana! Now your mana is " ^
+                                    (string_of_int new_p.mana));
                       match st.first_player with
                       | true -> {st with players = (new_p,op)}
                       | false -> {st with players = (op,new_p)}))
     | Them -> (match sp.effect with
               | Heal -> (let new_op = {op with hp = op.hp + sp.mag} in
+                        print_endline ("You have healed the opponent! Now their health is " ^
+                                      (string_of_int new_op.hp));
                         match st.first_player with
                         | true -> {st with players = (p,new_op)}
                         | false -> {st with players = (new_op,p)})
-              | Dmg -> (let new_op = {op with hp = op.hp - sp.mag} in
+              | Dmg -> (let new_op = if op.armor=0 then {op with hp = op.hp-sp.mag}
+                                     else if op.armor-sp.mag>=0 then
+                                       {op with armor = op.armor-sp.mag}
+                                     else let new_att = sp.mag - op.armor in
+                                       {op with armor=0; hp= op.hp-new_att}
+                                     in
+                       print_endline ("You have hurt the opponent! Now their health is " ^
+                                      (string_of_int new_op.hp));
                        match st.first_player with
                        | true -> {st with players = (p,new_op)}
                        | false -> {st with players = (new_op,p)})
               | Mana -> (let new_op = {op with mana = op.mana + sp.mag} in
+                        print_endline ("You boosted the opponent's mana! Now their mana is " ^
+                                      (string_of_int new_op.mana));
                         match st.first_player with
                         | true -> {st with players = (p,new_op)}
                         | false -> {st with players = (new_op,p)}))
@@ -102,6 +124,7 @@ struct
                                 | _ -> failwith "Sum Ting Wong" in
                         let new_m = {m with hp = m.hp + sp.mag} in
                         let new_c = {c with cat = Minion new_m} in
+                        print_endline ("You have healed your minion" ^ new_c.name);
                         let new_mins = List.filter (fun card -> card <> c)
                                        p.minions in
                         let new_p = {p with minions = new_c::new_mins} in
@@ -116,6 +139,7 @@ struct
                                | _ -> failwith "Sum Ting Wong" in
                        let new_m = {m with hp = m.hp - sp.mag} in
                        let new_c = {c with cat = Minion new_m} in
+                       print_endline ("You have hurt your minion" ^ new_c.name);
                        let new_mins = List.filter (fun card -> card <> c)
                                       p.minions in
                        let new_p = {p with minions = new_c::new_mins} in
@@ -132,6 +156,7 @@ struct
                                   | _ -> failwith "Sum Ting Wong" in
                           let new_m = {m with hp = m.hp + sp.mag} in
                           let new_c = {c with cat = Minion new_m} in
+                          print_endline ("You have healed the opponent's minion" ^ new_c.name);
                           let new_mins = List.filter (fun card -> card <> c)
                                          op.minions in
                           let new_op = {op with minions = new_c::new_mins} in
@@ -146,6 +171,7 @@ struct
                                  | _ -> failwith "Sum Ting Wong" in
                          let new_m = {m with hp = m.hp - sp.mag} in
                          let new_c = {c with cat = Minion new_m} in
+                         print_endline ("You have hurt the opponent's minion" ^ new_c.name);
                          let new_mins = List.filter (fun card -> card <> c)
                                         op.minions in
                          let new_op = {op with minions = new_c::new_mins} in
@@ -196,10 +222,14 @@ struct
                                               (new_p, snd st.players)}
                                   | false -> {st with players =
                                                (fst st.players, new_p)} in
-                   let new_st = match card.cat with
-                                | Minion _ | Weapon _ -> inter_st
-                                | Spell sp -> play_spell inter_st sp in
-                   new_st)
+                   match card.cat with
+                   | Minion _ -> print_endline ("You have played the minion " ^
+                                 card.name); inter_st
+                   | Weapon _ -> print_endline ("You have equipped the weapon " ^
+                                 card.name); inter_st
+                   | Spell sp -> print_endline ("You have used the spell " ^
+                                 card.name); play_spell inter_st sp
+                   )
 
   let pre_phase st =
     let pre_st = start_turn st in
@@ -209,7 +239,7 @@ struct
       | "no" -> state
       | "yes" -> print_endline "(type \"end\" to stop)";
                   (choose_card state) |> play_card
-      | _ -> print_endline "Command not understood. Type yes, no, or end.";
+      | _ -> print_endline "Command not understood. Type yes or no.";
              play_card state
     in
     play_card pre_st
@@ -309,13 +339,15 @@ struct
     new_state |> start_attack |> end_state
 
   let post_phase st =
+    let _ = Sys.command "clear" in
+    print_state st;
     let rec play_card state =
       let s = print_endline "Do you want to play a card?"; read_line () in
       match s with
       | "no" -> state
       | "yes" -> print_endline "(type \"end\" to stop)";
                   (choose_card state) |> play_card
-      | _ -> print_endline "Command not understood. Type yes, no, or end.";
+      | _ -> print_endline "Command not understood. Type yes or no.";
              play_card state
     in
     let new_state = play_card st in
