@@ -54,6 +54,10 @@ let print_card c =
   let cost = string_of_int c.cost in
   print_endline (typ ^ " : " ^ c.name ^ ", costs " ^ cost ^ " - " ^ c.desc)
 
+let print_card_notype c =
+  let cost = string_of_int c.cost in
+  print_endline (c.name ^ ", costs " ^ cost ^ " - " ^ c.desc)
+
 let rec print_card_list l =
   match l with
   | [] -> ()
@@ -98,18 +102,20 @@ let print_state st =
   print_string "Your equipped weapon: ";
   let () = match plyr.weap with
            | None -> print_endline "none"
-           | Some w -> print_card w in
+           | Some w -> print_card_notype w in
   print_endline "Your hand:";
   print_card_list plyr.hand;
   print_endline "Your minions in play: ";
-  print_minionlist plyr.minions;
+  if List.length plyr.minions = 0 then print_endline "none"
+    else print_minionlist plyr.minions;
   print_endline "\n";
   print_endline ("Oppenent's HP: " ^ (string_of_int other_plyr.hp));
   print_endline ("Oppenent's Armor: " ^ (string_of_int other_plyr.armor));
   print_string "Opponent's equipped weapon: ";
   let () = match other_plyr.weap with
            | None -> print_endline "none"
-           | Some w -> print_card w in
+           | Some w -> print_card_notype w in
   print_endline "Opponent's minions in play: ";
-  print_minionlist other_plyr.minions;
+  if List.length other_plyr.minions = 0 then print_endline "none"
+    else print_minionlist other_plyr.minions;
   print_endline ""; ()
