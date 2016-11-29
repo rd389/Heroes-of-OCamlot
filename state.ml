@@ -59,6 +59,28 @@ let rec print_card_list l =
   | [] -> ()
   | h::t -> print_card h; print_card_list t
 
+let rec print_bonuses l =
+  match l with
+  | [] -> ()
+  | (eff,mag)::t -> let () = (match eff with
+                    | Armor -> print_endline ("    Ar +" ^ (string_of_int mag))
+                    | Heal -> print_endline ("    Hp +" ^ (string_of_int mag))
+                    | Attack -> print_endline ("    Att " ^ (string_of_int mag))) in
+                    print_bonuses t
+
+
+let rec print_minionlist l =
+  match l with
+  | [] -> ()
+  | c::t -> let m = (match c.cat with | Minion min -> min
+                                      | _ -> failwith "Sum Ting Wong") in
+            print_endline (c.name ^ ":");
+            print_endline ("  HP = " ^ (string_of_int m.hp));
+            print_endline ("  Attack = " ^ (string_of_int m.attack));
+            print_endline ("  Bonuses:");
+            print_bonuses m.bonus
+
+
 let print_state st =
   let player_num = if st.first_player then " 1" else " 2" in
   let plyr = if st.first_player
@@ -80,9 +102,7 @@ let print_state st =
   print_endline "Your hand:";
   print_card_list plyr.hand;
   print_string "Your minions in play: ";
-  let () = match plyr.minions with
-           | [] -> print_endline "none"
-           | ms -> print_endline ""; print_card_list ms in
+  print_minionlist plyr.minions;
   print_endline "\n";
   print_endline ("Oppenent's HP: " ^ (string_of_int other_plyr.hp));
   print_endline ("Oppenent's Armor: " ^ (string_of_int other_plyr.armor));
@@ -91,7 +111,5 @@ let print_state st =
            | None -> print_endline "none"
            | Some w -> print_card w in
   print_string "Opponent's minions in play: ";
-  let () = match other_plyr.minions with
-           | [] -> print_endline "none"
-           | ms -> print_endline ""; print_card_list ms in
+  print_minionlist other_plyr.minions;
   print_endline ""; ()
