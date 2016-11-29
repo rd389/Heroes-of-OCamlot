@@ -215,7 +215,98 @@ struct
     play_card pre_st
 
   let attack_phase st =
-    st
+    let player = if st.first_player then ref (fst st.players)
+                 else ref (snd st.players) in
+    let opp = if st.first_player then ref (snd st.players)
+              else ref (fst st.players) in
+    let hero_attack = match (!player).weap with
+                      | None -> ref 0
+                      | Some c -> match c.cat with
+                                  | Weapon w -> ref w.dmg
+                                  | _ -> print_endline "Sum ting wong"; ref 0 in
+    let get_bonus c =
+      match c.cat with
+      | Minion c -> c.bonus
+      | _ -> print_endline "Sum ting wong"; [] in
+    let add_bonus p m =
+      let bonus = get_bonus m in
+      let new_armor = try(p.armor + List.assoc Armor bonus) with
+                      | _ -> p.armor in
+      let add_hp = try(p.hp + List.assoc HealM bonus) with
+                       | _ -> p.hp in
+      let new_hp = if add_hp > 30 then 30 else add_hp in
+      let add_attack = try(List.assoc Attack bonus) with
+                       | _ -> 0 in
+      hero_attack := (!hero_attack) + add_attack;
+      {p with armor = new_armor; hp = new_hp} in
+    let new_state =
+      player := List.fold_left add_bonus (!player) (!player).minions;
+      if st.first_player then
+                      {st with players = (!player, snd st.players)}
+                    else {st with players = (fst st.players, !player)} in
+    let them = if st.first_player then "P2" else "P1" in
+    let theirs = ref (!opp).minions in
+    let rec get_ans () =
+      match read_line () with
+      | "y" -> true
+      | "n" -> false
+      | _ -> print_endline "You a dumb slut?"; print_string "> "; get_ans () in
+    let format_minion c =
+      match c.cat with
+      | Minion m -> ((string_of_int m.attack) ^ "/" ^ (string_of_int m.hp) ^ " "
+                      ^ c.name)
+      | _ -> "Sum ting wong" in
+    let rec target ms =
+      let rec get_target a =
+        let rec attack_minion targ ts =
+          match ts with
+          | [] -> []
+          | h::t -> if(h.name = targ) then
+                     (let msg ="Is "^(format_minion h)^" your target?(y/n)" in
+                      let health = match h.cat with Minion c -> c.hp | _ -> 0 in
+                      let new_cat = match h.cat with
+                                    | Minion c -> Minion({c with hp = c.hp - a})
+                                    | _ -> h.cat in
+                      let new_min = {h with cat = new_cat} in
+                      print_endline msg; print_string "> ";
+                      if(get_ans ()) then
+                       (if(health <= a) then
+                          (print_endline ((format_minion h) ^ " has been slain."); t)
+                        else (print_endline ((format_minion h) ^ " is now " ^ (format_minion new_min));
+                          new_min::t))
+                      else h::(attack_minion targ t))
+                    else(h::(attack_minion targ t)) in
+        match read_line () with
+        | "" -> ()
+        | x when x = them -> (if((!opp).hp <= a) then
+                                raise GameOver
+                              else ( let new_hp = (!opp).hp - a in
+                                opp := {!opp with hp = new_hp};
+                                print_endline (x ^ " hp: " ^
+                                              (string_of_int new_hp))))
+        | y -> (if (List.exists (fun c -> c.name = y) (!theirs)) then
+                  ( let mins = attack_minion y (!theirs) in
+                    theirs := mins)
+                else (print_string "Invalid target, try again.\n> ";
+                  get_target a)) in
+      match ms with
+      | [] -> print_string "Pick a target for your hero:\n> ";
+              get_target (!hero_attack);
+      | h::t -> ( print_endline ("Pick a target for your " ^
+                                  (format_minion h) ^ "\n> ");
+                match h.cat with
+                | Minion c -> get_target c.attack; target t;
+                |  _ -> print_endline "Sum ting wong"; );
+      opp := {!opp with minions = (!theirs)} in
+    let end_state s =
+      target (!player).minions;
+      if s.first_player then {s with players = (!player, !opp)}
+        else {s with players = (!opp, !player)} in
+    let start_attack s =
+      let a= string_of_int (!hero_attack) in
+      ignore (Sys.command "clear"); print_state s;
+      print_endline ("Your hero has " ^ a ^ " attack."); s in
+    new_state |> start_attack |> end_state
 
   let post_phase st =
     let rec play_card state =
