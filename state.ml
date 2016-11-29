@@ -70,25 +70,28 @@ let print_state st =
   print_endline ("Player" ^ player_num ^ "'s turn.");
   print_endline "State of game:";
   print_endline "";
+  print_endline ("Your HP: " ^ (string_of_int plyr.hp));
+  print_endline ("Your Mana: " ^ (string_of_int plyr.mana));
+  print_endline ("Your Armor: " ^ (string_of_int plyr.armor));
+  print_string "Your equipped weapon: ";
+  let () = match plyr.weap with
+           | None -> print_endline "none"
+           | Some w -> print_card w in
   print_endline "Your hand:";
   print_card_list plyr.hand;
-  print_string "Your equipped weapon: ";
-  match plyr.weap with
-  | None -> print_endline "none";
-  | Some w -> print_card w;
   print_string "Your minions in play: ";
-  match plyr.minions with
-  | [] -> print_endline "none";
-  | ms -> print_endline ""; print_card_list ms;
-  print_endline "";
-  print_endline "Your opponent's hand:";
-  print_card_list other_plyr.hand;
-  print_string "Your opponent's equipped weapon: ";
-  match other_plyr.weap with
-  | None -> print_endline "none";
-  | Some w -> print_card w;
-  print_string "Your opponent's minions in play: ";
-  match other_plyr.minions with
-  | [] -> print_endline "none";
-  | ms -> print_endline ""; print_card_list ms;
+  let () = match plyr.minions with
+           | [] -> print_endline "none"
+           | ms -> print_endline ""; print_card_list ms in
+  print_endline "\n";
+  print_endline ("Oppenent's HP: " ^ (string_of_int other_plyr.hp));
+  print_endline ("Oppenent's Armor: " ^ (string_of_int other_plyr.armor));
+  print_string "Opponent's equipped weapon: ";
+  let () = match other_plyr.weap with
+           | None -> print_endline "none"
+           | Some w -> print_card w in
+  print_string "Opponent's minions in play: ";
+  let () = match other_plyr.minions with
+           | [] -> print_endline "none"
+           | ms -> print_endline ""; print_card_list ms in
   print_endline ""; ()

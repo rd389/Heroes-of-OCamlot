@@ -215,7 +215,7 @@ struct
     play_card pre_st
 
   let attack_phase st =
-    raise Unimplemented
+    st
 
   let post_phase st =
     let rec play_card state =

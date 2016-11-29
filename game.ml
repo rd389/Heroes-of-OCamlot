@@ -78,33 +78,48 @@ let play (module P1 : Player) (module P2 : Player) =
     else plyr in
 
   let hero1 () =
-    {hp = 30; mana = 0; weap = None; armor = 0; hand = [];
+    {hp = 30; mana = 1; weap = None; armor = 0; hand = [];
       deck = deck1; minions = []}
       |> draw_card_noprompt |> draw_card_noprompt |> draw_card_noprompt
     in
   let hero2 () =
-    {hp = 30; mana = 0; weap = None; armor = 0; hand = [];
+    {hp = 30; mana = 1; weap = None; armor = 0; hand = [];
       deck = deck2; minions = []}
       |> draw_card_noprompt |> draw_card_noprompt |> draw_card_noprompt
     in
+  let clear_terminal st =
+    let _ = Sys.command "clear" in st
+    in
+
+  let id st = match read_line () with _ -> clear_terminal st in
   let start_state () =
-    print_endline "Both players' decks have been shuffled, and starting hands have been drawn.";
-    {turn = 0; first_player = true; players = (hero1 (), hero2 ())} in
+    print_endline "Both players' decks have been shuffled, and starting hands have been drawn.\n";
+    print_endline "Press Enter/Return.";
+    id {turn = 1; first_player = true; players = (hero1 (), hero2 ())} in
+
 
   let finish_turn st =
-    raise Unimplemented in
-
-  let clear_terminal st =
-    raise Unimplemented in
+    if st.first_player then
+      (if P1.is_human then (let _ = clear_terminal st in
+                           print_endline "Pass computer to Player 1.";
+                           print_endline "Player 1, press Enter/Return.";
+                           id st)
+      else (print_endline "Press Enter/Return to start AI's turn"; id st))
+    else (if P2.is_human then (let _ = clear_terminal st in
+                              print_endline "Pass computer to Player 2.";
+                              print_endline "Player 2, press Enter/Return.";
+                              id st)
+         else (print_endline "Press Enter/Return to start AI's turn"; id st))
+    in
 
   let rec play_game st =
     try (
       ( if st.first_player then
-          st |> P1.pre_phase |> clear_terminal |>
-          P1.attack_phase |> clear_terminal |>
+          st |> P1.pre_phase |>
+          P1.attack_phase |>
           P1.post_phase |> finish_turn |> clear_terminal
-        else st |> P2.pre_phase |> clear_terminal |>
-             P2.attack_phase |> clear_terminal |>
+        else st |> P2.pre_phase |>
+             P2.attack_phase |>
              P2.post_phase |> finish_turn |> clear_terminal
       )
       |> play_game )
@@ -113,4 +128,4 @@ let play (module P1 : Player) (module P2 : Player) =
     if st.first_player then
       print_endline "Player 1 wins! \nThank you for playing! Goodbye."
     else print_endline "Player 2 wins! \n Thank you for playing! Goodbye." in
-  start_state () |> play_game |> end_game
+  start_state () |> finish_turn |> play_game |> end_game
