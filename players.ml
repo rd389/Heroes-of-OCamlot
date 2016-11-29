@@ -292,7 +292,7 @@ struct
       match ms with
       | [] -> print_string "Pick a target for your hero:\n> ";
               get_target (!hero_attack);
-      | h::t -> ( print_endline ("Pick a target for your " ^
+      | h::t -> ( print_string ("Pick a target for your " ^
                                   (format_minion h) ^ "\n> ");
                 match h.cat with
                 | Minion c -> get_target c.attack; target t;
@@ -304,7 +304,8 @@ struct
         else {s with players = (!opp, !player)} in
     let start_attack s =
       let a= string_of_int (!hero_attack) in
-      ignore (Sys.command "clear"); print_state s;
+      let _ = Sys.command "clear" in
+      print_state s;
       print_endline ("Your hero has " ^ a ^ " attack."); s in
     new_state |> start_attack |> end_state
 
