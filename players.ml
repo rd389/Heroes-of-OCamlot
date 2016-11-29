@@ -238,18 +238,18 @@ struct
                                               (fst st.players, new_p)} sp)
                    )
 
+  let rec play_card state =
+    let s = print_string "Do you want to play a card?(y/n)\n> ";
+      read_line () in
+    match s with
+    | "n" -> state
+    | "y" -> print_endline "(type \"end\" to stop)";
+                (choose_card state) |> play_card
+    | _ -> print_endline "Command not understood. Please type y or n.";
+           play_card state
+
   let pre_phase st =
     let pre_st = start_turn st in
-    let rec play_card state =
-      let s = print_string "Do you want to play a card?(y/n)\n> ";
-        read_line () in
-      match s with
-      | "n" -> state
-      | "y" -> print_endline "(type \"end\" to stop)";
-                  (choose_card state) |> play_card
-      | _ -> print_endline "Command not understood. Please type y or n.";
-             play_card state
-    in
     play_card pre_st
 
   let attack_phase st =
@@ -314,22 +314,49 @@ struct
                           new_min::t))
                       else h::(attack_minion targ t))
                     else(h::(attack_minion targ t)) in
+        let rec attack_hero at =
+          if(!opp.armor <> 0) then
+            ( let new_armor = (!opp).armor - a in
+              if new_armor <= 0 then
+                (opp := {!opp with armor = 0};
+                 print_endline (them ^ "'s Armor: 0"); attack_hero (~- new_armor)
+                )
+              else(opp := {!opp with armor = new_armor};
+                   print_endline (them ^ "'s Armor: " ^ (string_of_int new_armor)));
+                   print_endline (them ^ "'s HP: " ^(string_of_int (!opp).hp))
+              )
+          else (let new_hp = (!opp).hp - a in
+                if new_hp <= 0 then raise GameOver
+                else (opp := {!opp with hp = new_hp};
+                  print_endline (them ^ "'s HP: " ^ (string_of_int new_hp)))) in
         match read_line () with
         | "" -> ()
-        | x when x = them -> (if((!opp).hp <= a) then
-                                raise GameOver
-                              else ( let new_hp = (!opp).hp - a in
-                                opp := {!opp with hp = new_hp};
-                                print_endline (x ^ " hp: " ^
-                                              (string_of_int new_hp))))
+        | x when x = them -> attack_hero a
         | y -> (if (List.exists (fun c -> c.name = y) (!theirs)) then
                   ( let mins = attack_minion y (!theirs) in
                     theirs := mins)
                 else (print_string "Invalid target, try again.\n> ";
                   get_target a)) in
+      let alter_weap () =
+        match (!player).weap with
+        | None -> ()
+        | Some c ->(match c.cat with
+                    | Weapon w -> if w.durability = 1 then
+                                   (print_endline (c.name ^ " broke!");
+                                    player := {!player with weap = None})
+                                  else
+                                   (let new_dur = w.durability - 1 in
+                                    let new_weap = Weapon {w with durability = new_dur} in
+                                    let new_c = {c with cat = new_weap} in
+                                    print_endline("Weapon durability -> " ^ (string_of_int new_dur));
+                                    player := {!player with weap = Some new_c})
+                    | _ -> print_endline "Sum ting wong" ) in
       match ms with
-      | [] -> print_string "Pick a target for your hero:\n> ";
-              get_target (!hero_attack);
+      | [] -> if(!hero_attack <> 0) then
+               (print_string "Pick a target for your hero:\n> ";
+                get_target (!hero_attack); alter_weap (); )
+              else ();
+              print_endline "Press Enter/Return"; ignore (read_line ());
       | h::t -> ( print_string ("Pick a target for your " ^
                                   (format_minion h) ^ "\n> ");
                 match h.cat with
@@ -350,16 +377,6 @@ struct
   let post_phase st =
     let _ = Sys.command "clear" in
     print_state st;
-    let rec play_card state =
-      let s = print_string "Do you want to play a card?(y/n)\n> ";
-        read_line () in
-      match s with
-      | "n" -> state
-      | "y" -> print_endline "(type \"end\" to stop)";
-                  (choose_card state) |> play_card
-      | _ -> print_endline "Command not understood. Please type y or n.";
-             play_card state
-    in
     let new_state = play_card st in
     let new_player = match new_state.first_player with
                      | true -> fst new_state.players
