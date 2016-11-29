@@ -210,6 +210,8 @@ struct
                                  let new_p = {p with mana = new_mana; hand = new_hand; minions = new_mins} in
                                  print_endline ("You have played the minion " ^
                                  card.name);
+                                 print_endline ("Your mana is now " ^
+                                 (string_of_int new_mana));
                                  match st.first_player with
                                  | true -> {st with players =
                                              (new_p, snd st.players)}
@@ -221,6 +223,8 @@ struct
                                  let new_p = {p with mana = new_mana; hand = new_hand; weap = new_weap} in
                                  print_endline ("You have equipped the weapon " ^
                                  card.name);
+                                 print_endline ("Your mana is now " ^
+                                 (string_of_int new_mana));
                                  match st.first_player with
                                  | true -> {st with players =
                                              (new_p, snd st.players)}
@@ -231,6 +235,8 @@ struct
                                  let new_p = {p with mana =new_mana; hand = new_hand} in
                                  print_endline ("You have used the spell " ^
                                  card.name);
+                                 print_endline ("Your mana is now " ^
+                                 (string_of_int new_mana));
                                  match st.first_player with
                                  | true -> play_spell {st with players =
                                              (new_p, snd st.players)} sp
