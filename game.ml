@@ -16,7 +16,7 @@ let deck_builder filename =
   let get_list k j = j |> member k |> to_list in
   let build_bonus j =
     let eff = match get_string "effect" j with
-              | "armor" -> Armor | "heal" -> Heal | "attack" -> Attack
+              | "armor" -> Armor | "heal" -> HealM | "attack" -> Attack
               | _ -> failwith "Invalid minion bonus effect" in
     (eff, get_int "amount" j) in
   let build_minion j =
