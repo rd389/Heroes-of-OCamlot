@@ -94,9 +94,8 @@ struct
                         | true -> {st with players = (p,new_op)}
                         | false -> {st with players = (new_op,p)}))
     | Mine -> (match sp.effect with
-              | Heal -> (let s = print_endline
-                                 "Choose one of your minions to heal";
-                                 read_line () in
+              | Heal -> print_string "Choose one of your minions to heal\n> ";
+                       (let s = read_line () in
                         let c = pick_minion p s in
                         let m = match c.cat with Minion min -> min
                                 | _ -> failwith "Sum Ting Wong" in
@@ -108,9 +107,8 @@ struct
                         match st.first_player with
                         | true -> {st with players = (new_p,op)}
                         | false -> {st with players = (op,new_p)})
-              | Dmg -> (let s = print_endline
-                                "Choose one of your minions to attack";
-                                read_line () in
+              | Dmg -> print_string "Choose one of your minions to damage\n> ";
+                      (let s = read_line () in
                        let c = pick_minion p s in
                        let m = match c.cat with Minion min -> min
                                | _ -> failwith "Sum Ting Wong" in
@@ -124,9 +122,8 @@ struct
                        | false -> {st with players = (op,new_p)})
               | Mana -> print_endline "No mana effect on minions"; st)
     | Theirs -> (match sp.effect with
-                | Heal -> (let s = print_endline
-                                   "Choose one of the opponent's minions to heal";
-                                   read_line () in
+                | Heal -> print_string "Choose one of the opponent's minions to heal\n> ";
+                         (let s = read_line () in
                           let c = pick_minion op s in
                           let m = match c.cat with Minion min -> min
                                   | _ -> failwith "Sum Ting Wong" in
@@ -138,9 +135,8 @@ struct
                           match st.first_player with
                           | true -> {st with players = (p,new_op)}
                           | false -> {st with players = (new_op,p)})
-                | Dmg -> (let s = print_endline
-                                  "Choose one of the opponent's minions to attack";
-                                  read_line () in
+                | Dmg -> print_string "Choose one of the opponent's minions to damage\n> ";
+                        (let s = read_line () in
                          let c = pick_minion op s in
                          let m = match c.cat with Minion min -> min
                                  | _ -> failwith "Sum Ting Wong" in
@@ -153,8 +149,8 @@ struct
                          | true -> {st with players = (p,new_op)}
                          | false -> {st with players = (new_op,p)})
                 | Mana -> print_endline "No mana effect on minions"; st)
-    | Any -> (match (print_endline "Choose a target (Me, Them, Mine, or Theirs).";
-                    read_line ()) with
+    | Any ->  print_string "Choose a target (Me, Them, Mine, or Theirs).\n> ";
+              (match (read_line ()) with
               | "Me" -> (play_spell st {sp with target = Me})
               | "Them" -> (play_spell st {sp with target = Them})
               | "Mine" -> (play_spell st {sp with target = Mine})
@@ -164,7 +160,7 @@ struct
              )
 
   let rec pick_card p =
-    let s = print_endline "Play a card in your hand"; read_line () in
+    let s = print_string "Play a card in your hand\n> "; read_line () in
     match s with
     | "end" -> None
     | _ -> (try Some (List.hd (List.filter (fun c -> s = c.name) p.hand)) with
@@ -204,12 +200,13 @@ struct
   let pre_phase st =
     let pre_st = start_turn st in
     let rec play_card state =
-      let s = print_endline "Do you want to play a card?"; read_line () in
+      let s = print_string "Do you want to play a card?(y/n)\n> ";
+        read_line () in
       match s with
-      | "no" -> state
-      | "yes" -> print_endline "(type \"end\" to stop)";
+      | "n" -> state
+      | "y" -> print_endline "(type \"end\" to stop)";
                   (choose_card state) |> play_card
-      | _ -> print_endline "Command not understood. Type yes, no, or end.";
+      | _ -> print_endline "Command not understood. Please type y or n.";
              play_card state
     in
     play_card pre_st
@@ -304,19 +301,20 @@ struct
         else {s with players = (!opp, !player)} in
     let start_attack s =
       let a= string_of_int (!hero_attack) in
-      let _ = Sys.command "clear" in
       print_state s;
       print_endline ("Your hero has " ^ a ^ " attack."); s in
+    let _ = Sys.command "clear" in
     new_state |> start_attack |> end_state
 
   let post_phase st =
     let rec play_card state =
-      let s = print_endline "Do you want to play a card?"; read_line () in
+      let s = print_string "Do you want to play a card?(y/n)\n> ";
+        read_line () in
       match s with
-      | "no" -> state
-      | "yes" -> print_endline "(type \"end\" to stop)";
+      | "n" -> state
+      | "y" -> print_endline "(type \"end\" to stop)";
                   (choose_card state) |> play_card
-      | _ -> print_endline "Command not understood. Type yes, no, or end.";
+      | _ -> print_endline "Command not understood. Please type y or n.";
              play_card state
     in
     let new_state = play_card st in
