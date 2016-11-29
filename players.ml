@@ -448,6 +448,8 @@ struct
     let rec target ms =
       let get_target a =
         let rec attack_hero at =
+          print_endline "P1";
+          Unix.sleep(1);
           if(!opp.armor <> 0) then
             ( let new_armor = (!opp).armor - a in
               if new_armor <= 0 then
@@ -501,13 +503,15 @@ struct
                                     print_endline("Weapon durability -> " ^ (string_of_int new_dur));
                                     player := {!player with weap = Some new_c})
                     | _ -> print_endline "Sum ting wong" ) in
+      Unix.sleep(2);
       match ms with
       | [] -> if(!hero_attack <> 0) then
-               (print_string "AI: hero's target: ";
+               (print_string "AI: hero's target: "; Unix.sleep(1);
                 get_target (!hero_attack); alter_weap (); )
               else ();
               print_endline "Press Enter/Return"; ignore (read_line ());
-      | h::t -> ( print_string ("AI: " ^ (format_minion h) ^ "'s target: ");
+      | h::t ->(print_string ("AI: " ^ (format_minion h) ^ "'s target: ");
+                Unix.sleep(1);
                 match h.cat with
                 | Minion c -> get_target c.attack; target t;
                 |  _ -> print_endline "Sum ting wong"; ); in
