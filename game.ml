@@ -66,21 +66,47 @@ let play (module P1 : Player) (module P2 : Player) =
       else print_endline "Please enter the AI's deck file:" );
     print_string "> ";
     read_line () |> deck_builder in
+
+  let draw_card_noprompt plyr =
+    if (not (List.length plyr.deck = 0))
+    then
+      let card = List.hd plyr.deck in
+      let new_deck = List.tl plyr.deck in
+      let new_hand = card::plyr.hand in
+      let new_plyr = {plyr with hand = new_hand; deck = new_deck} in
+      new_plyr
+    else plyr in
+
   let hero1 () =
     {hp = 30; mana = 0; weap = None; armor = 0; hand = [];
       deck = deck1; minions = []}
-      |> P1.draw_card |> P1.draw_card |> P1.draw_card in
+      |> draw_card_noprompt |> draw_card_noprompt |> draw_card_noprompt
+    in
   let hero2 () =
     {hp = 30; mana = 0; weap = None; armor = 0; hand = [];
       deck = deck2; minions = []}
-      |> P2.draw_card |> P2.draw_card |> P2.draw_card in
+      |> draw_card_noprompt |> draw_card_noprompt |> draw_card_noprompt
+    in
   let start_state () =
+    print_endline "Both players' decks have been shuffled, and starting hands have been drawn.";
     {turn = 0; first_player = true; players = (hero1 (), hero2 ())} in
+
+  let finish_turn st =
+    raise Unimplemented in
+
+  let clear_terminal st =
+    raise Unimplemented in
+
   let rec play_game st =
     try (
       ( if st.first_player then
-          st |> P1.pre_phase |> P1.attack_phase |> P1.post_phase
-        else st |> P2.pre_phase |> P2.attack_phase |> P2.post_phase )
+          st |> P1.pre_phase |> clear_terminal |>
+          P1.attack_phase |> clear_terminal |>
+          P1.post_phase |> finish_turn |> clear_terminal
+        else st |> P2.pre_phase |> clear_terminal |>
+             P2.attack_phase |> clear_terminal |>
+             P2.post_phase |> finish_turn |> clear_terminal
+      )
       |> play_game )
     with _ -> st in
   let end_game st =
