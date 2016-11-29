@@ -39,6 +39,8 @@ let deck_builder filename =
     let weapon = {dmg = get_int "dmg" j; durability = (get_int "dur" j)} in
     {name = get_string "name" j; desc = get_string "desc" j;
       cost = get_int "cost" j; cat = Weapon weapon} in
+
+  (* CITE DIS *)
   let shuffle deck =
     let nd = List.map (fun c -> (Random.bits (), c)) deck in
     let sond = List.sort compare nd in
