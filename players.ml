@@ -51,6 +51,118 @@ struct
     | true -> {st with first_player = false}
     | false -> {st with turn = st.turn+1; first_player = true}
 
+  let rec pick_minion p s : card =
+    try List.hd (List.filter (fun c -> s = c.name) p.minions) with
+    | _ -> print_endline "Not a minion in play"; pick_minion p s
+
+  let rec play_spell st sp =
+    let p = match st.first_player with
+            | true -> fst st.players
+            | false -> snd st.players in
+    let op = match st.first_player with
+             | true -> snd st.players
+             | false -> fst st.players in
+    match sp.target with
+    | All -> (let inter_st1 = play_spell st {sp with target = Me} in
+             let inter_st2 = play_spell inter_st1 {sp with target = Mine} in
+             let inter_st3 = play_spell inter_st2 {sp with target = Them} in
+             play_spell inter_st3 {sp with target = Theirs})
+    | Me -> (match sp.effect with
+            | Heal -> (let new_p = {p with hp = p.hp + sp.mag} in
+                      match st.first_player with
+                      | true -> {st with players = (new_p,op)}
+                      | false -> {st with players = (op,new_p)})
+            | Dmg -> (let new_p = {p with hp = p.hp - sp.mag} in
+                     match st.first_player with
+                     | true -> {st with players = (new_p,op)}
+                     | false -> {st with players = (op,new_p)})
+            | Mana -> (let new_p = {p with mana = p.mana + sp.mag} in
+                      match st.first_player with
+                      | true -> {st with players = (new_p,op)}
+                      | false -> {st with players = (op,new_p)}))
+    | Them -> (match sp.effect with
+              | Heal -> (let new_op = {op with hp = op.hp + sp.mag} in
+                        match st.first_player with
+                        | true -> {st with players = (p,new_op)}
+                        | false -> {st with players = (new_op,p)})
+              | Dmg -> (let new_op = {op with hp = op.hp - sp.mag} in
+                       match st.first_player with
+                       | true -> {st with players = (p,new_op)}
+                       | false -> {st with players = (new_op,p)})
+              | Mana -> (let new_op = {op with mana = op.mana + sp.mag} in
+                        match st.first_player with
+                        | true -> {st with players = (p,new_op)}
+                        | false -> {st with players = (new_op,p)}))
+    | Mine -> (match sp.effect with
+              | Heal -> (let s = print_endline
+                                 "Choose one of your minions to heal";
+                                 read_line () in
+                        let c = pick_minion p s in
+                        let m = match c.cat with Minion min -> min
+                                | _ -> failwith "Sum Ting Wong" in
+                        let new_m = {m with hp = m.hp + sp.mag} in
+                        let new_c = {c with cat = Minion new_m} in
+                        let new_mins = List.filter (fun card -> card <> c)
+                                       p.minions in
+                        let new_p = {p with minions = new_c::new_mins} in
+                        match st.first_player with
+                        | true -> {st with players = (new_p,op)}
+                        | false -> {st with players = (op,new_p)})
+              | Dmg -> (let s = print_endline
+                                "Choose one of your minions to attack";
+                                read_line () in
+                       let c = pick_minion p s in
+                       let m = match c.cat with Minion min -> min
+                               | _ -> failwith "Sum Ting Wong" in
+                       let new_m = {m with hp = m.hp - sp.mag} in
+                       let new_c = {c with cat = Minion new_m} in
+                       let new_mins = List.filter (fun card -> card <> c)
+                                      p.minions in
+                       let new_p = {p with minions = new_c::new_mins} in
+                       match st.first_player with
+                       | true -> {st with players = (new_p,op)}
+                       | false -> {st with players = (op,new_p)})
+              | Mana -> print_endline "No mana effect on minions"; st)
+    | Theirs -> (match sp.effect with
+                | Heal -> (let s = print_endline
+                                   "Choose one of the opponent's minions to heal";
+                                   read_line () in
+                          let c = pick_minion op s in
+                          let m = match c.cat with Minion min -> min
+                                  | _ -> failwith "Sum Ting Wong" in
+                          let new_m = {m with hp = m.hp + sp.mag} in
+                          let new_c = {c with cat = Minion new_m} in
+                          let new_mins = List.filter (fun card -> card <> c)
+                                         op.minions in
+                          let new_op = {op with minions = new_c::new_mins} in
+                          match st.first_player with
+                          | true -> {st with players = (p,new_op)}
+                          | false -> {st with players = (new_op,p)})
+                | Dmg -> (let s = print_endline
+                                  "Choose one of the opponent's minions to attack";
+                                  read_line () in
+                         let c = pick_minion op s in
+                         let m = match c.cat with Minion min -> min
+                                 | _ -> failwith "Sum Ting Wong" in
+                         let new_m = {m with hp = m.hp - sp.mag} in
+                         let new_c = {c with cat = Minion new_m} in
+                         let new_mins = List.filter (fun card -> card <> c)
+                                        op.minions in
+                         let new_op = {op with minions = new_c::new_mins} in
+                         match st.first_player with
+                         | true -> {st with players = (p,new_op)}
+                         | false -> {st with players = (new_op,p)})
+                | Mana -> print_endline "No mana effect on minions"; st)
+    | Any -> (match (print_endline "Choose a target (Me, Them, Mine, or Theirs).";
+                    read_line ()) with
+              | "Me" -> (play_spell st {sp with target = Me})
+              | "Them" -> (play_spell st {sp with target = Them})
+              | "Mine" -> (play_spell st {sp with target = Mine})
+              | "Theirs" -> (play_spell st {sp with target = Theirs})
+              | _ -> (print_endline "Invalid target.";
+                     play_spell st sp)
+             )
+
   let rec pick_card p =
     let s = print_endline "Play a card in your hand"; read_line () in
     match s with
@@ -59,62 +171,69 @@ struct
            | _ -> (let () = print_endline "This card is not in your hand" in
                   pick_card p))
 
-  let rec choose_card p =
+  let rec choose_card st =
+    let p = match st.first_player with
+            | true -> fst st.players
+            | false -> snd st.players in
     let c = pick_card p in
     match c with
-    | None -> p
-    | Some card when card.cost>p.mana -> print_endline "Not enough mana to play
-                                         this card"; choose_card p
+    | None -> st
+    | Some card when card.cost>p.mana -> print_endline
+                                         "Not enough mana to play this card";
+                                         choose_card st
     | Some card -> (let new_mana = p.mana - card.cost in
+                   let new_hand = List.filter (fun c -> c <> card) p.hand in
                    let new_weap = match card.cat with
                                   | Minion _ | Spell _ -> None
                                   | Weapon _ -> Some card in
-                   let new_hand = List.filter (fun c -> c <> card) p.hand in
                    let new_mins = match card.cat with
                                   | Spell _ | Weapon _ -> p.minions
                                   | Minion _ -> card::p.minions in
-                   {p with mana = new_mana; weap = new_weap; hand = new_hand;
-                   minions = new_mins} )
+                   let new_p = {p with mana = new_mana; weap = new_weap;
+                     hand = new_hand; minions = new_mins} in
+                   let inter_st = match st.first_player with
+                                  | true -> {st with players =
+                                              (new_p, snd st.players)}
+                                  | false -> {st with players =
+                                               (fst st.players, new_p)} in
+                   let new_st = match card.cat with
+                                | Minion _ | Weapon _ -> inter_st
+                                | Spell sp -> play_spell inter_st sp in
+                   new_st)
 
   let pre_phase st =
-    print_state st;
     let pre_st = start_turn st in
-    let player = match pre_st.first_player with
-                 | true -> fst pre_st.players
-                 | false -> snd pre_st.players in
-    let rec play_card p =
+    let rec play_card state =
       let s = print_endline "Do you want to play a card?"; read_line () in
       match s with
-      | "no" -> p
+      | "no" -> state
       | "yes" -> print_endline "(type \"end\" to stop)";
-                  (choose_card p) |> play_card
-      | _ -> print_endline "Command not understood. Type yes or no."; play_card p
+                  (choose_card state) |> play_card
+      | _ -> print_endline "Command not understood. Type yes or no.";
+             play_card state
     in
-    let new_player = play_card player in
-    if pre_st.first_player then
-    {pre_st with players = (new_player, snd pre_st.players)}
-    else {pre_st with players = (fst pre_st.players, new_player)}
+    play_card pre_st
 
   let attack_phase st =
     raise Unimplemented
 
   let post_phase st =
-    print_state st;
-    let player = match st.first_player with
-                 | true -> fst st.players
-                 | false -> snd st.players in
-    let rec play_card p =
+    let rec play_card state =
       let s = print_endline "Do you want to play a card?"; read_line () in
       match s with
-      | "no" -> p
+      | "no" -> state
       | "yes" -> print_endline "(type \"end\" to stop)";
-                  (choose_card p) |> play_card
-      | _ -> print_endline "Command not understood. Type yes or no."; play_card p
+                  (choose_card state) |> play_card
+      | _ -> print_endline "Command not understood. Type yes or no.";
+             play_card state
     in
-    let new_player = play_card player in
-    if st.first_player then
-      (end_turn {st with players = (new_player, snd st.players)})
-    else (end_turn {st with players = (fst st.players, new_player)})
+    let new_state = play_card st in
+    let new_player = match new_state.first_player with
+                     | true -> fst new_state.players
+                     | false -> snd new_state.players in
+    if (new_player.weap = None && new_player.hand = [] && new_player.deck = []
+    && new_player.minions = []) then raise GameOver
+    else end_turn new_state
 end
 
 module AIPlayer : Player =
