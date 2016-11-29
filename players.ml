@@ -209,7 +209,7 @@ struct
       | "no" -> state
       | "yes" -> print_endline "(type \"end\" to stop)";
                   (choose_card state) |> play_card
-      | _ -> print_endline "Command not understood. Type yes or no.";
+      | _ -> print_endline "Command not understood. Type yes, no, or end.";
              play_card state
     in
     play_card pre_st
@@ -224,7 +224,7 @@ struct
       | "no" -> state
       | "yes" -> print_endline "(type \"end\" to stop)";
                   (choose_card state) |> play_card
-      | _ -> print_endline "Command not understood. Type yes or no.";
+      | _ -> print_endline "Command not understood. Type yes, no, or end.";
              play_card state
     in
     let new_state = play_card st in
