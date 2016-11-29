@@ -46,17 +46,42 @@ type state = {
   players : hero * hero;
 }
 
+let rec bonuses l =
+  match l with
+  | [] -> ""
+  | (eff,mag)::t -> let b = (match eff with
+                            | Armor -> ("Ar +" ^ (string_of_int mag))
+                            | HealM -> ("Hp +" ^ (string_of_int mag))
+                            | Attack -> ("Att " ^ (string_of_int mag))) in
+                    b ^ (bonuses t)
+
 let print_card c =
   let typ = match c.cat with
   | Minion _ -> "Minion"
   | Spell _ -> "Spell"
   | Weapon _ -> "Weapon" in
   let cost = string_of_int c.cost in
-  print_endline (typ ^ " : " ^ c.name ^ ", costs " ^ cost ^ " - " ^ c.desc)
+  let desc = match c.cat with
+             | Minion m -> ("HP " ^ (string_of_int m.hp) ^ ", Att " ^
+                           (string_of_int m.attack) ^ ", " ^
+                           "Bonuses: [" ^ (bonuses m.bonus) ^ "]")
+             | Spell sp -> let targ = match sp.target with
+                                      | All -> "All" | Me -> "Me"
+                                      | Them -> "Them" | Mine -> "Mine"
+                                      | Theirs -> "Theirs" | Any -> "Any" in
+                           let eff = match sp.effect with
+                                     | Heal -> "Heal" | Dmg -> "Dmg"
+                                     | Mana -> "Mana" in
+                           ("Target " ^ targ ^ ", " ^ eff ^ " " ^(string_of_int sp.mag))
+             | Weapon wp -> ("Dmg " ^ (string_of_int wp.dmg) ^ ", " ^ "Dur " ^ (string_of_int wp.durability))
+             in
+  print_endline (typ ^ " : " ^ c.name ^ ", costs " ^ cost ^ " - " ^ desc)
 
-let print_card_notype c =
-  let cost = string_of_int c.cost in
-  print_endline (c.name ^ ", costs " ^ cost ^ " - " ^ c.desc)
+let print_weap_notype wc =
+  let cost = string_of_int wc.cost in
+  let wp = match wc.cat with Weapon w -> w | _ -> failwith "Sum Ting Wong" in
+  let desc = ("Dmg " ^ (string_of_int wp.dmg) ^ ", " ^ "Dur " ^ (string_of_int wp.durability)) in
+  print_endline (wc.name ^ ", costs " ^ cost ^ " - " ^ desc)
 
 let rec print_card_list l =
   match l with
@@ -102,9 +127,10 @@ let print_state st =
   print_string "Your equipped weapon: ";
   let () = match plyr.weap with
            | None -> print_endline "none"
-           | Some w -> print_card_notype w in
+           | Some w -> print_weap_notype w in
   print_endline "Your hand:";
-  print_card_list plyr.hand;
+  if List.length plyr.hand = 0 then print_endline "none"
+    else print_card_list plyr.hand;
   print_endline "Your minions in play: ";
   if List.length plyr.minions = 0 then print_endline "none"
     else print_minionlist plyr.minions;
@@ -114,7 +140,7 @@ let print_state st =
   print_string "Opponent's equipped weapon: ";
   let () = match other_plyr.weap with
            | None -> print_endline "none"
-           | Some w -> print_card_notype w in
+           | Some w -> print_weap_notype w in
   print_endline "Opponent's minions in play: ";
   if List.length other_plyr.minions = 0 then print_endline "none"
     else print_minionlist other_plyr.minions;

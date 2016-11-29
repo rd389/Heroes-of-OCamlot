@@ -203,28 +203,39 @@ struct
     | Some card when card.cost>p.mana -> print_endline
                                          "Not enough mana to play this card";
                                          choose_card st
-    | Some card -> (let new_mana = p.mana - card.cost in
-                   let new_hand = List.filter (fun c -> c <> card) p.hand in
-                   let new_weap = match card.cat with
-                                  | Minion _ | Spell _ -> None
-                                  | Weapon _ -> Some card in
-                   let new_mins = match card.cat with
-                                  | Spell _ | Weapon _ -> p.minions
-                                  | Minion _ -> card::p.minions in
-                   let new_p = {p with mana = new_mana; weap = new_weap;
-                     hand = new_hand; minions = new_mins} in
-                   let inter_st = match st.first_player with
-                                  | true -> {st with players =
-                                              (new_p, snd st.players)}
-                                  | false -> {st with players =
-                                               (fst st.players, new_p)} in
-                   match card.cat with
-                   | Minion _ -> print_endline ("You have played the minion " ^
-                                 card.name); inter_st
-                   | Weapon _ -> print_endline ("You have equipped the weapon " ^
-                                 card.name); inter_st
-                   | Spell sp -> print_endline ("You have used the spell " ^
-                                 card.name); play_spell inter_st sp
+    | Some card -> (match card.cat with
+                   | Minion m -> (let new_mana = p.mana - card.cost in
+                                 let new_hand = List.filter (fun c -> c <> card) p.hand in
+                                 let new_mins = card::p.minions in
+                                 let new_p = {p with mana = new_mana; hand = new_hand; minions = new_mins} in
+                                 print_endline ("You have played the minion " ^
+                                 card.name);
+                                 match st.first_player with
+                                 | true -> {st with players =
+                                             (new_p, snd st.players)}
+                                 | false -> {st with players =
+                                              (fst st.players, new_p)})
+                   | Weapon w -> (let new_mana = p.mana - card.cost in
+                                 let new_hand = List.filter (fun c -> c <> card) p.hand in
+                                 let new_weap = Some card in
+                                 let new_p = {p with mana = new_mana; hand = new_hand; weap = new_weap} in
+                                 print_endline ("You have equipped the weapon " ^
+                                 card.name);
+                                 match st.first_player with
+                                 | true -> {st with players =
+                                             (new_p, snd st.players)}
+                                 | false -> {st with players =
+                                              (fst st.players, new_p)})
+                   | Spell sp -> (let new_mana = p.mana - card.cost in
+                                 let new_hand = List.filter (fun c -> c <> card) p.hand in
+                                 let new_p = {p with mana =new_mana; hand = new_hand} in
+                                 print_endline ("You have used the spell " ^
+                                 card.name);
+                                 match st.first_player with
+                                 | true -> play_spell {st with players =
+                                             (new_p, snd st.players)} sp
+                                 | false -> play_spell {st with players =
+                                              (fst st.players, new_p)} sp)
                    )
 
   let pre_phase st =
