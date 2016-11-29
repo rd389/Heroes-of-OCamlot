@@ -402,7 +402,125 @@ struct
   let pre_phase st =
     raise Unimplemented
   let attack_phase st =
-    raise Unimplemented
+    let player = ref (snd st.players) in
+    let opp = ref (fst st.players) in
+    let hero_attack = match (!player).weap with
+                      | None -> ref 0
+                      | Some c -> match c.cat with
+                                  | Weapon w -> ref w.dmg
+                                  | _ -> print_endline "Sum ting wong"; ref 0 in
+    let get_bonus c =
+      match c.cat with
+      | Minion c -> c.bonus
+      | _ -> print_endline "Sum ting wong"; [] in
+    let add_bonus p m =
+      let bonus = get_bonus m in
+      let new_armor = try(p.armor + List.assoc Armor bonus) with
+                      | _ -> p.armor in
+      let add_hp = try(p.hp + List.assoc HealM bonus) with
+                       | _ -> p.hp in
+      let new_hp = if add_hp > 30 then 30 else add_hp in
+      let add_attack = try(List.assoc Attack bonus) with
+                       | _ -> 0 in
+      hero_attack := (!hero_attack) + add_attack;
+      {p with armor = new_armor; hp = new_hp} in
+    let new_state =
+      player := List.fold_left add_bonus (!player) (!player).minions;
+      {st with players = (!opp, !player)} in
+    let theirs = ref (!opp).minions in
+    let format_minion c =
+      match c.cat with
+      | Minion m -> ((string_of_int m.attack) ^ "/" ^ (string_of_int m.hp) ^ " "
+                      ^ c.name)
+      | _ -> "Sum ting wong" in
+    let get_min_health c =
+      match c.cat with Minion m -> m.hp | _ -> print_endline "Sum ting wong"; 0 in
+    let get_killable ms a =
+      (List.filter
+        (fun c -> (get_min_health c) <= a) ms) in
+    let get_min_attack c =
+      match c.cat with Minion m -> m.hp | _ -> print_endline "Sum ting wong"; 0 in
+    let max_att ms =
+      List.fold_left
+        (fun a c -> if (get_min_attack a) < (get_min_attack c) then c
+                      else a) (List.hd ms) ms in
+    let attack_a_minion () = if (Random.int 3) < 2 then true else false in
+    let rec target ms =
+      let get_target a =
+        let rec attack_hero at =
+          if(!opp.armor <> 0) then
+            ( let new_armor = (!opp).armor - a in
+              if new_armor <= 0 then
+                (opp := {!opp with armor = 0};
+                 print_endline ("Your Armor: 0"); attack_hero (~- new_armor)
+                )
+              else(opp := {!opp with armor = new_armor};
+                   print_endline ("Your Armor: " ^ (string_of_int new_armor)));
+                   print_endline ("Your HP: " ^(string_of_int (!opp).hp))
+              )
+          else (let new_hp = (!opp).hp - a in
+                if new_hp <= 0 then raise GameOver
+                else (opp := {!opp with hp = new_hp};
+                  print_endline ("Your HP: " ^ (string_of_int new_hp)))) in
+        let rec attack_minion m ts =
+          match ts with
+          | [] -> []
+          | h::t -> if(h = m) then
+                     (let health = get_min_health h in
+                      let new_cat = match h.cat with
+                                    | Minion c -> Minion({c with hp = health - a})
+                                    | _ -> h.cat in
+                      let new_min = {h with cat = new_cat} in
+                      print_endline (format_minion h);
+                      Unix.sleep(1);
+                      if(health <= a) then
+                       (print_endline ((format_minion h) ^ " has been slain."); t)
+                      else (print_endline ("Your" ^ (format_minion h) ^ " is now " ^
+                              (format_minion new_min)); new_min::t))
+                    else(h::(attack_minion m t)) in
+        if (((!opp).hp + (!opp).armor) <= a) then
+          (raise GameOver)
+        else (
+          match (get_killable (!theirs) a) with
+          | [] -> if(attack_a_minion ()) then
+                    theirs := attack_minion (max_att !theirs) (!theirs)
+                  else
+                    attack_hero a
+          | l -> theirs := (attack_minion (max_att l) (!theirs))) in
+      let alter_weap () =
+        match (!player).weap with
+        | None -> ()
+        | Some c ->(match c.cat with
+                    | Weapon w -> if w.durability = 1 then
+                                   (print_endline (c.name ^ " broke!");
+                                    player := {!player with weap = None})
+                                  else
+                                   (let new_dur = w.durability - 1 in
+                                    let new_weap = Weapon {w with durability = new_dur} in
+                                    let new_c = {c with cat = new_weap} in
+                                    print_endline("Weapon durability -> " ^ (string_of_int new_dur));
+                                    player := {!player with weap = Some new_c})
+                    | _ -> print_endline "Sum ting wong" ) in
+      match ms with
+      | [] -> if(!hero_attack <> 0) then
+               (print_string "AI: hero's target: ";
+                get_target (!hero_attack); alter_weap (); )
+              else ();
+              print_endline "Press Enter/Return"; ignore (read_line ());
+      | h::t -> ( print_string ("AI: " ^ (format_minion h) ^ "'s target: ");
+                match h.cat with
+                | Minion c -> get_target c.attack; target t;
+                |  _ -> print_endline "Sum ting wong"; ); in
+    let end_state s =
+      target (!player).minions;
+      {s with players = (!opp, !player)} in
+    let start_attack s =
+      let a = string_of_int (!hero_attack) in
+      print_state ({s with first_player = true});
+      print_endline ("AI hero has " ^ a ^ "attack."); s in
+    let _ = Sys.command "clear" in
+    new_state |> start_attack |> end_state
+
   let post_phase st =
     raise Unimplemented
   let end_turn st =
