@@ -1,4 +1,4 @@
-type min_effect = Armor | Heal | Attack
+type min_effect = Armor | HealM | Attack
 
 type sp_effect = Heal | Dmg | Mana
 
