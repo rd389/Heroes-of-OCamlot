@@ -101,7 +101,7 @@ let print_state st =
            | Some w -> print_card w in
   print_endline "Your hand:";
   print_card_list plyr.hand;
-  print_string "Your minions in play: ";
+  print_endline "Your minions in play: ";
   print_minionlist plyr.minions;
   print_endline "\n";
   print_endline ("Oppenent's HP: " ^ (string_of_int other_plyr.hp));
@@ -110,6 +110,6 @@ let print_state st =
   let () = match other_plyr.weap with
            | None -> print_endline "none"
            | Some w -> print_card w in
-  print_string "Opponent's minions in play: ";
+  print_endline "Opponent's minions in play: ";
   print_minionlist other_plyr.minions;
   print_endline ""; ()
