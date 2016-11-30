@@ -132,7 +132,7 @@ struct
                        (let s = read_line () in
                         let c = pick_minion p s in
                         let m = match c.cat with Minion min -> min
-                                | _ -> failwith "Sum Ting Wong" in
+                                | _ -> failwith "Error" in
                         let new_m = {m with hp = m.hp + sp.mag} in
                         let new_c = {c with cat = Minion new_m} in
                         print_endline ("You have healed your minion" ^ new_c.name);
@@ -146,7 +146,7 @@ struct
                       (let s = read_line () in
                        let c = pick_minion p s in
                        let m = match c.cat with Minion min -> min
-                               | _ -> failwith "Sum Ting Wong" in
+                               | _ -> failwith "Error" in
                        let new_m = {m with hp = m.hp - sp.mag} in
                        let new_c = {c with cat = Minion new_m} in
                        print_endline ("You have hurt your minion" ^ new_c.name);
@@ -165,7 +165,7 @@ struct
                          (let s = read_line () in
                           let c = pick_minion op s in
                           let m = match c.cat with Minion min -> min
-                                  | _ -> failwith "Sum Ting Wong" in
+                                  | _ -> failwith "Error" in
                           let new_m = {m with hp = m.hp + sp.mag} in
                           let new_c = {c with cat = Minion new_m} in
                           print_endline ("You have healed the opponent's minion" ^ new_c.name);
@@ -179,7 +179,7 @@ struct
                         (let s = read_line () in
                          let c = pick_minion op s in
                          let m = match c.cat with Minion min -> min
-                                 | _ -> failwith "Sum Ting Wong" in
+                                 | _ -> failwith "Error" in
                          let new_m = {m with hp = m.hp - sp.mag} in
                          let new_c = {c with cat = Minion new_m} in
                          print_endline ("You have hurt the opponent's minion" ^ new_c.name);
@@ -290,11 +290,11 @@ struct
                       | None -> ref 0
                       | Some c -> match c.cat with
                                   | Weapon w -> ref w.dmg
-                                  | _ -> print_endline "Sum ting wong"; ref 0 in
+                                  | _ -> failwith "Error" in
     let get_bonus c =
       match c.cat with
       | Minion c -> c.bonus
-      | _ -> print_endline "Sum ting wong"; [] in
+      | _ -> failwith "Error" in
     let add_bonus p m =
       let bonus = get_bonus m in
       let new_armor = try(p.armor + List.assoc Armor bonus) with
@@ -317,12 +317,12 @@ struct
       match read_line () with
       | "y" -> true
       | "n" -> false
-      | _ -> print_endline "You a dumb slut?"; print_string "> "; get_ans () in
+      | _ -> print_string "Please enter y or n\n> "; get_ans () in
     let format_minion c =
       match c.cat with
       | Minion m -> ((string_of_int m.attack) ^ "/" ^ (string_of_int m.hp) ^ " "
                       ^ c.name)
-      | _ -> "Sum ting wong" in
+      | _ -> failwith "Error" in
     let rec target ms =
       let rec get_target a =
         let rec attack_minion targ ts =
@@ -363,7 +363,10 @@ struct
         | x when x = them -> attack_hero a
         | y -> (if (List.exists (fun c -> c.name = y) (!theirs)) then
                   ( let mins = attack_minion y (!theirs) in
-                    theirs := mins)
+                    if mins = !theirs then
+                     (print_string "No target selected, try again\n> ";
+                      get_target a)
+                    else (theirs := mins))
                 else (print_string "Invalid target, try again\n> ";
                   get_target a)) in
       let alter_weap () =
@@ -379,7 +382,7 @@ struct
                                     let new_c = {c with cat = new_weap} in
                                     print_endline("Weapon durability -> " ^ (string_of_int new_dur));
                                     player := {!player with weap = Some new_c})
-                    | _ -> print_endline "Sum ting wong" ) in
+                    | _ -> failwith "Error" ) in
       match ms with
       | [] -> if(!hero_attack <> 0) then
                (print_string "Pick a target for your hero:\n> ";
@@ -390,7 +393,7 @@ struct
                                   (format_minion h) ^ "\n> ");
                 match h.cat with
                 | Minion c -> get_target c.attack; target t;
-                |  _ -> print_endline "Sum ting wong"; );
+                |  _ -> failwith "Error" );
       opp := {!opp with minions = (!theirs)} in
     let end_state s =
       target (!player).minions;
@@ -433,7 +436,7 @@ struct
   (* [replenish_mana st] Returns the state after replenishing the AI's mana
    * in state [st] based on the turn number in that state. *)
   let replenish_mana st =
-    if st.first_player then failwith "Sum Ting Wong"
+    if st.first_player then failwith "Error"
     else
     let ai = snd st.players in
     let new_ai = if st.turn > 10 then {ai with mana = 10}
@@ -441,7 +444,7 @@ struct
     {st with players = (fst st.players, new_ai)}
 
   let start_turn st =
-    if st.first_player then failwith "Sum Ting Wong"
+    if st.first_player then failwith "Error"
     else
     let start_state = replenish_mana st in
     let (p1, ai) = start_state.players in
@@ -451,32 +454,32 @@ struct
 
   let end_turn st =
     match st.first_player with
-    | true -> failwith "Sum Ting Wong"
+    | true -> failwith "Error"
     | false -> {st with turn = st.turn+1; first_player = true}
 
   (* [can_kill st sp] returns true if spell [sp] can kill either Player 1 or any
    * of Player 1's minions in state [st]. Otherwise returns false. *)
   let can_kill st sp =
-    if st.first_player then failwith "Sum Ting Wong" else
+    if st.first_player then failwith "Error" else
     let (p,ai) = st.players in
-    if sp.effect<>Dmg then failwith "Sum ting wong" else
+    if sp.effect<>Dmg then failwith "Error" else
     match sp.target with
     | Them -> (if sp.mag>=p.armor+p.hp then true else false)
     | Theirs -> (let mins = List.map
                            (fun c -> match c.cat with
                                      | Minion m -> m.hp
-                                     | _ -> failwith "Sum ting wong")
+                                     | _ -> failwith "Error")
                            p.minions in
                 let boo = List.fold_left
                           (fun b hp -> if sp.mag>=hp then (b||true)
                                        else (b||false)) false mins in
                 boo)
-    | _ -> (failwith "Sum ting wong")
+    | _ -> (failwith "Error")
 
   (* [play_spell st sp] returns the state after the AI plays spell [sp] in state
    * [st]. *)
   let rec play_spell st sp =
-    if st.first_player then failwith "Sum Ting Wong" else
+    if st.first_player then failwith "Error" else
     let (p,ai) = st.players in
     match sp.target with
     | All -> (let inter_st1 = play_spell st {sp with target = Me} in
@@ -529,13 +532,13 @@ struct
                         let mins_dmg = List.map
                                        (fun c -> match c.cat with
                                                  | Minion m -> (m.attack,c)
-                                                 | _ -> failwith "Sum ting wong")
+                                                 | _ -> failwith "Error")
                                        ai.minions
                                        in
                         let strongest_min = (List.sort compare mins_dmg) |>
                                             List.rev |> List.hd |> snd in
                         let m = match strongest_min.cat with Minion min -> min
-                                | _ -> failwith "Sum Ting Wong" in
+                                | _ -> failwith "Error" in
                         let new_m = {m with hp = m.hp + sp.mag} in
                         let new_c = {strongest_min with cat = Minion new_m} in
                         print_endline ("AI healed its minion" ^ new_c.name);
@@ -549,7 +552,7 @@ struct
                        else (
                        let c = List.hd ai.minions in
                        let m = match c.cat with Minion min -> min
-                               | _ -> failwith "Sum Ting Wong" in
+                               | _ -> failwith "Error" in
                        let new_m = {m with hp = m.hp - sp.mag} in
                        let new_c = {c with cat = Minion new_m} in
                        print_endline ("AI hurt its own minion" ^ new_c.name);
@@ -565,7 +568,7 @@ struct
                           else (
                           let c = List.hd p.minions in
                           let m = match c.cat with Minion min -> min
-                                  | _ -> failwith "Sum Ting Wong" in
+                                  | _ -> failwith "Error" in
                           let new_m = {m with hp = m.hp + sp.mag} in
                           let new_c = {c with cat = Minion new_m} in
                           print_endline ("AI healed your minion" ^ new_c.name);
@@ -580,12 +583,12 @@ struct
                          let mins_dmg = List.map
                                        (fun c -> match c.cat with
                                                  | Minion m -> (m.attack,c)
-                                                 | _ -> failwith "Sum ting wong")
+                                                 | _ -> failwith "Error")
                                        p.minions in
                          let cankill = List.filter
                                        (fun (_,c) -> match c.cat with
                                                      | Minion m -> m.hp<=sp.mag
-                                                     | _ -> failwith "Sum ting wong")
+                                                     | _ -> failwith "Error")
                                        mins_dmg in
                          let c = if cankill=[] then (List.sort compare mins_dmg)
                                    |> List.rev |> List.hd |> snd
@@ -593,7 +596,7 @@ struct
                                    List.hd |> snd
                                  in
                          let m = match c.cat with Minion min -> min
-                                 | _ -> failwith "Sum Ting Wong" in
+                                 | _ -> failwith "Error" in
                          let new_m = {m with hp = m.hp - sp.mag} in
                          let new_c = {c with cat = Minion new_m} in
                          print_endline ("You have hurt the opponent's minion" ^ new_c.name);
@@ -629,7 +632,7 @@ struct
   (* [play_card st hand] returns the state after the AI plays cards in its hand
    * [hand] in state [st]. *)
   let rec play_card st hand =
-    if st.first_player then failwith "Sum Ting Wong"
+    if st.first_player then failwith "Error"
     else
     let ai = snd st.players in
     match hand with
@@ -675,7 +678,7 @@ struct
 
 
   let pre_phase st =
-    if st.first_player then failwith "Sum Ting Wong"
+    if st.first_player then failwith "Error"
     else
     let pre_st = start_turn st in
     print_state {pre_st with first_player = true};
@@ -691,11 +694,11 @@ struct
                       | None -> ref 0
                       | Some c -> match c.cat with
                                   | Weapon w -> ref w.dmg
-                                  | _ -> print_endline "Sum ting wong"; ref 0 in
+                                  | _ -> failwith "Error" in
     let get_bonus c =
       match c.cat with
       | Minion c -> c.bonus
-      | _ -> print_endline "Sum ting wong"; [] in
+      | _ -> failwith "Error" in
     let add_bonus p m =
       let bonus = get_bonus m in
       let new_armor = try(p.armor + List.assoc Armor bonus) with
@@ -715,14 +718,14 @@ struct
       match c.cat with
       | Minion m -> ((string_of_int m.attack) ^ "/" ^ (string_of_int m.hp) ^ " "
                       ^ c.name)
-      | _ -> "Sum ting wong" in
+      | _ -> failwith "Error" in
     let get_min_health c =
-      match c.cat with Minion m -> m.hp | _ -> print_endline "Sum ting wong"; 0 in
+      match c.cat with Minion m -> m.hp | _ -> failwith "Error" in
     let get_killable ms a =
       (List.filter
         (fun c -> (get_min_health c) <= a) ms) in
     let get_min_attack c =
-      match c.cat with Minion m -> m.hp | _ -> print_endline "Sum ting wong"; 0 in
+      match c.cat with Minion m -> m.hp | _ -> failwith "Error" in
     let max_att ms =
       List.fold_left
         (fun a c -> if (get_min_attack a) < (get_min_attack c) then c
@@ -785,7 +788,7 @@ struct
                                     print_endline("Weapon durability -> " ^ (string_of_int new_dur));
                                     Unix.sleep(2);
                                     player := {!player with weap = Some new_c})
-                    | _ -> print_endline "Sum ting wong" ) in
+                    | _ -> failwith "Error" ) in
       Unix.sleep(2);
       match ms with
       | [] -> if(!hero_attack <> 0) then
@@ -798,7 +801,7 @@ struct
                 print_string "Target: ";
                 match h.cat with
                 | Minion c -> get_target c.attack; target t;
-                |  _ -> print_endline "Sum ting wong"; );
+                |  _ -> failwith "Error"; );
       opp := {!opp with minions = !theirs} in
     let end_state s =
       target (!player).minions;
@@ -811,7 +814,7 @@ struct
     new_state |> start_attack |> end_state
 
   let post_phase st =
-    if st.first_player then failwith "Sum ting wong" else
+    if st.first_player then failwith "Error" else
     let ai = snd st.players in
     if (ai.weap = None && ai.hand = [] && ai.deck = [] &&
       ai.minions = []) then raise GameOver
