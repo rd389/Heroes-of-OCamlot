@@ -49,6 +49,7 @@ let deck_builder filename =
    * The purpose of this function is to shuffle the deck created from a JSON
    * file before gameplay begins. *)
   let shuffle deck =
+    Random.self_init ();
     let nd = List.map (fun c -> (Random.bits (), c)) deck in
     let sond = List.sort compare nd in
     List.map snd sond in
@@ -56,7 +57,7 @@ let deck_builder filename =
   (* [get_file f] reads a JSON value from file [f], or prompts user to input a
    * file of the correct type if [f] is not a JSON file. *)
   let rec get_file f =
-    try (Yojson.Basic.from_file filename) with
+    try (Yojson.Basic.from_file f) with
     | _ -> (print_endline "Invalid file, try again."; print_string "> ";
       read_line () |> get_file) in
 
