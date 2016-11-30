@@ -752,7 +752,7 @@ struct
       List.fold_left
         (fun a c -> if (get_min_attack a) < (get_min_attack c) then c
                       else a) (List.hd ms) ms in
-    let attack_a_minion () = (Random.int 5) < 4 in
+    let attack_a_minion () = (Random.int 3) < 2 in
     let rec target ms =
       let get_target a =
         let rec attack_hero () =
@@ -792,10 +792,11 @@ struct
         else (
           match (get_killable (!theirs) a) with
           | [] -> if (attack_a_minion ()) && (!theirs <> []) then
-                    theirs := attack_minion (max_att !theirs) (!theirs)
+                    theirs := (attack_minion (max_att !theirs) (!theirs))
                   else
                     attack_hero ()
-          | l -> theirs := (attack_minion (max_att l) (!theirs))) in
+          | l -> (let new_mins = attack_minion (max_att l) (!theirs) in
+                  theirs := new_mins)) in
       let alter_weap () =
         match (!player).weap with
         | None -> ()

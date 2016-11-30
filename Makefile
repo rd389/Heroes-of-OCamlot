@@ -1,8 +1,8 @@
 main:
-	ocamlbuild -pkgs oUnit,yojson,ANSITerminal main.byte
+	ocamlbuild -pkgs unix,yojson main.byte
 
 clean:
 	ocamlbuild -clean
 
 play:
-	ocamlbuild -pkgs oUnit,yojson,ANSITerminal main.byte; ./main.byte
+	ocamlbuild -pkgs unix,yojson main.byte; ./main.byte

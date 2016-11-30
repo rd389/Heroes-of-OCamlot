@@ -127,11 +127,11 @@ let play (module P1 : Player) (module P2 : Player) =
    * begin the AI's turn. *)
   let finish_turn st =
     if st.first_player then
-      (if P1.is_human then (let _ = clear_terminal st in
+      (if P2.is_human then (let _ = clear_terminal st in
                            print_endline "Pass computer to Player 1.";
                            print_endline "Player 1, press Enter/Return.";
                            id st)
-      else (print_endline "Press Enter/Return to start AI's turn"; id st))
+      else (print_endline "Press Enter/Return to start your turn"; id st))
     else (if P2.is_human then (let _ = clear_terminal st in
                               print_endline "Pass computer to Player 2.";
                               print_endline "Player 2, press Enter/Return.";
@@ -166,6 +166,6 @@ let play (module P1 : Player) (module P2 : Player) =
     Unix.sleepf(2.5);
     if st.first_player then
       print_endline "Player 1 wins! \nThank you for playing! Goodbye."
-    else print_endline "Player 2 wins! \n Thank you for playing! Goodbye." in
+    else print_endline "Player 2 wins! \nThank you for playing! Goodbye." in
 
   start_state () |> finish_turn |> play_game |> end_game
