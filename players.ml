@@ -688,7 +688,7 @@ struct
                       | None -> ref 0
                       | Some c -> match c.cat with
                                   | Weapon w -> ref w.dmg
-                                  | _ -> failwith "Error"; ref 0 in
+                                  | _ -> failwith "Error" in
     let get_bonus c =
       match c.cat with
       | Minion c -> c.bonus
