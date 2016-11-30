@@ -321,20 +321,19 @@ struct
                       else h::(attack_minion targ t))
                     else(h::(attack_minion targ t)) in
         let rec attack_hero at =
-          if(!opp.armor <> 0) then
-            ( let new_armor = (!opp).armor - a in
-              if new_armor <= 0 then
-                (opp := {!opp with armor = 0};
-                 print_endline (them ^ "'s Armor: 0"); attack_hero (~- new_armor)
-                )
-              else(opp := {!opp with armor = new_armor};
-                   print_endline (them ^ "'s Armor: " ^ (string_of_int new_armor)));
-                   print_endline (them ^ "'s HP: " ^(string_of_int (!opp).hp))
-              )
-          else (let new_hp = (!opp).hp - a in
-                if new_hp <= 0 then raise GameOver
-                else (opp := {!opp with hp = new_hp};
-                  print_endline (them ^ "'s HP: " ^ (string_of_int new_hp)))) in
+          let new_armor = (!opp).armor - a in
+          if(new_armor <= 0) then
+           (let new_hp = (!opp).hp + new_armor in
+            opp := {!opp with armor = 0; hp = new_hp};
+            print_endline (them ^ "'s Armor: 0");
+            print_endline (them ^ "'s HP: " ^(string_of_int (!opp).hp));
+            if (new_hp <= 0) then raise GameOver else ();
+           )
+          else(
+            opp := {!opp with armor = new_armor};
+            print_endline (them ^ "'s Armor: " ^(string_of_int (!opp).armor));
+            print_endline (them ^ "'s HP: " ^(string_of_int (!opp).hp));
+            ) in
         match read_line () with
         | "" -> ()
         | x when x = them -> attack_hero a
@@ -447,23 +446,22 @@ struct
     let attack_a_minion () = if (Random.int 3) < 2 then true else false in
     let rec target ms =
       let get_target a =
-        let rec attack_hero at =
+        let rec attack_hero () =
+          let new_armor = (!opp).armor - a in
           print_endline "P1";
           Unix.sleep(1);
-          if(!opp.armor <> 0) then
-            ( let new_armor = (!opp).armor - a in
-              if new_armor <= 0 then
-                (opp := {!opp with armor = 0};
-                 print_endline ("Your Armor: 0"); attack_hero (~- new_armor)
-                )
-              else(opp := {!opp with armor = new_armor};
-                   print_endline ("Your Armor: " ^ (string_of_int new_armor)));
-                   print_endline ("Your HP: " ^(string_of_int (!opp).hp))
-              )
-          else (let new_hp = (!opp).hp - a in
-                if new_hp <= 0 then raise GameOver
-                else (opp := {!opp with hp = new_hp};
-                  print_endline ("Your HP: " ^ (string_of_int new_hp)))) in
+          if(new_armor <= 0) then
+           (let new_hp = (!opp).hp + new_armor in
+            opp := {!opp with armor = 0; hp = new_hp};
+            print_endline ("Your Armor: 0");
+            print_endline ("Your HP: " ^(string_of_int (!opp).hp));
+            if (new_hp <= 0) then raise GameOver else ();
+           )
+          else(
+            opp := {!opp with armor = new_armor};
+            print_endline ("Your Armor: " ^(string_of_int (!opp).armor));
+            print_endline ("Your HP: " ^(string_of_int (!opp).hp));
+            ) in
         let rec attack_minion m ts =
           match ts with
           | [] -> []
@@ -481,13 +479,13 @@ struct
                               (format_minion new_min)); new_min::t))
                     else(h::(attack_minion m t)) in
         if (((!opp).hp + (!opp).armor) <= a) then
-          (raise GameOver)
+          (attack_hero ())
         else (
           match (get_killable (!theirs) a) with
           | [] -> if(attack_a_minion ()) then
                     theirs := attack_minion (max_att !theirs) (!theirs)
                   else
-                    attack_hero a
+                    attack_hero ()
           | l -> theirs := (attack_minion (max_att l) (!theirs))) in
       let alter_weap () =
         match (!player).weap with
