@@ -163,6 +163,7 @@ let play (module P1 : Player) (module P2 : Player) =
   (* [end_game st] ends the game in state st, and indicates which player has won.
    *)
   let end_game st =
+    Unix.sleepf(2.5);
     if st.first_player then
       print_endline "Player 1 wins! \nThank you for playing! Goodbye."
     else print_endline "Player 2 wins! \n Thank you for playing! Goodbye." in
