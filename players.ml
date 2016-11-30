@@ -421,13 +421,12 @@ struct
   let post_phase st =
     let _ = Sys.command "clear" in
     print_state st;
-    let new_state = play_card st in
-    let new_player = match new_state.first_player with
-                     | true -> fst new_state.players
-                     | false -> snd new_state.players in
+    let new_player = match st.first_player with
+                     | true -> fst st.players
+                     | false -> snd st.players in
     if (new_player.weap = None && new_player.hand = [] && new_player.deck = []
     && new_player.minions = []) then raise GameOverOpp
-    else end_turn new_state
+    else end_turn st
 end
 
 module AIPlayer : Player =
