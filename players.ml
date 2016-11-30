@@ -395,17 +395,271 @@ end
 module AIPlayer : Player =
 struct
   let is_human = false
-  let draw_card st =
-    raise Unimplemented
+
+  let draw_card plyr =
+    if (not (List.length plyr.deck = 0))
+    then
+      let card = List.hd plyr.deck in
+      let new_deck = List.tl plyr.deck in
+      let new_hand = card::plyr.hand in
+      let new_plyr = {plyr with hand = new_hand; deck = new_deck} in
+      print_endline "AI drew a card";
+      new_plyr
+    else (print_endline "AI's deck is empty"; plyr)
+
+  let replenish_mana st =
+    if st.first_player then failwith "Sum Ting Wong"
+    else
+    let ai = snd st.players in
+    let new_ai = if st.turn > 10 then {ai with mana = 10}
+                     else {ai with mana = st.turn} in
+    {st with players = (fst st.players, new_ai)}
+
   let start_turn st =
-    raise Unimplemented
-  let pre_phase st =
-    raise Unimplemented
-  let attack_phase st =
-    raise Unimplemented
-  let post_phase st =
-    raise Unimplemented
+    if st.first_player then failwith "Sum Ting Wong"
+    else
+    let start_state = replenish_mana st in
+    let (p1, ai) = start_state.players in
+    let new_plyrs = (p1, ai |> draw_card) in
+    let new_st = {start_state with players = new_plyrs} in
+    new_st
+
   let end_turn st =
-    raise Unimplemented
+    match st.first_player with
+    | true -> failwith "Sum Ting Wong"
+    | false -> {st with turn = st.turn+1; first_player = true}
+
+  let can_kill st sp =
+    if st.first_player then failwith "Sum Ting Wong" else
+    let (p,ai) = st.players in
+    if sp.effect<>Dmg then failwith "Sum ting wong" else
+    match sp.target with
+    | Them -> (if sp.mag>=p.armor+p.hp then true else false)
+    | Theirs -> (let mins = List.map
+                           (fun c -> match c.cat with
+                                     | Minion m -> m.hp
+                                     | _ -> failwith "Sum ting wong")
+                           p.minions in
+                let boo = List.fold_left
+                          (fun b hp -> if sp.mag>=hp then (b||true)
+                                       else (b||false)) false mins in
+                boo)
+    | _ -> (failwith "Sum ting wong")
+
+  let rec play_spell st sp =
+    if st.first_player then failwith "Sum Ting Wong" else
+    let (p,ai) = st.players in
+    match sp.target with
+    | All -> (let inter_st1 = play_spell st {sp with target = Me} in
+             let inter_st2 = play_spell inter_st1 {sp with target = Mine} in
+             let inter_st3 = play_spell inter_st2 {sp with target = Them} in
+             play_spell inter_st3 {sp with target = Theirs})
+    | Me -> (match sp.effect with
+            | Heal -> (let new_ai = {ai with hp = ai.hp + sp.mag} in
+                      print_endline ("AI has healed! AI's health is now " ^
+                                    (string_of_int new_ai.hp));
+                      {st with players = (p,new_ai)})
+            | Dmg -> (let new_ai = if ai.armor=0 then {ai with hp = ai.hp-sp.mag}
+                                   else if ai.armor-sp.mag >= 0 then
+                                     {ai with armor = ai.armor-sp.mag}
+                                   else let new_att = sp.mag-ai.armor in
+                                     {ai with armor=0; hp= ai.hp - new_att}
+                                   in
+                     print_endline ("AI has hurt itself! AI's health is now " ^
+                                   (string_of_int new_ai.hp));
+                     if ai.hp <= 0 then raise GameOver else
+                     {st with players = (p,new_ai)})
+            | Mana -> (let new_ai = {ai with mana = ai.mana + sp.mag} in
+                      print_endline ("AI boosted its mana! Now AI's mana is " ^
+                                    (string_of_int new_ai.mana));
+                      {st with players = (p,new_ai)}))
+    | Them -> (match sp.effect with
+              | Heal -> (let new_p = {p with hp = p.hp + sp.mag} in
+                        print_endline ("AI healed you! Now your health is " ^
+                                      (string_of_int new_p.hp));
+                        {st with players = (new_p,ai)})
+              | Dmg -> (let new_p = if p.armor=0 then {p with hp = p.hp-sp.mag}
+                                    else if p.armor-sp.mag>=0 then
+                                      {p with armor = p.armor-sp.mag}
+                                    else let new_att = sp.mag - p.armor in
+                                      {p with armor=0; hp= p.hp-new_att}
+                                    in
+                       print_endline ("AI has hurt you! Now your health is " ^
+                                      (string_of_int new_p.hp));
+                       if new_p.hp <= 0 then raise GameOver else
+                       {st with players = (new_p,ai)})
+              | Mana -> (let new_p = {p with mana = p.mana + sp.mag} in
+                        print_endline ("AI boosted your mana! Now your mana is " ^
+                                      (string_of_int new_p.mana));
+                        {st with players = (new_p,ai)}))
+    | Mine -> (match sp.effect with
+              | Heal -> (if ai.minions=[] then
+                           (print_endline "AI has no minions in play to heal";
+                           st)
+                        else (
+                        let mins_dmg = List.map
+                                       (fun c -> match c.cat with
+                                                 | Minion m -> (m.attack,c)
+                                                 | _ -> failwith "Sum ting wong")
+                                       ai.minions
+                                       in
+                        let strongest_min = (List.sort compare mins_dmg) |>
+                                            List.rev |> List.hd |> snd in
+                        let m = match strongest_min.cat with Minion min -> min
+                                | _ -> failwith "Sum Ting Wong" in
+                        let new_m = {m with hp = m.hp + sp.mag} in
+                        let new_c = {strongest_min with cat = Minion new_m} in
+                        print_endline ("AI healed its minion" ^ new_c.name);
+                        let new_mins = List.filter (fun card -> card <> strongest_min)
+                                       ai.minions in
+                        let new_ai = {ai with minions = new_c::new_mins} in
+                        {st with players = (p,new_ai)}))
+              | Dmg -> (if ai.minions=[] then
+                          (print_endline "AI has no minions in play to attack";
+                          st)
+                       else (
+                       let c = List.hd ai.minions in
+                       let m = match c.cat with Minion min -> min
+                               | _ -> failwith "Sum Ting Wong" in
+                       let new_m = {m with hp = m.hp - sp.mag} in
+                       let new_c = {c with cat = Minion new_m} in
+                       print_endline ("AI hurt its own minion" ^ new_c.name);
+                       let new_mins = List.filter (fun card -> card <> c)
+                                      ai.minions in
+                       let new_ai = {ai with minions = new_c::new_mins} in
+                       {st with players = (p,new_ai)}))
+              | Mana -> print_endline "No mana effect on minions"; st)
+    | Theirs -> (match sp.effect with
+                | Heal -> (if p.minions=[] then
+                             (print_endline "You have no minions in play for AI to heal";
+                             st)
+                          else (
+                          let c = List.hd p.minions in
+                          let m = match c.cat with Minion min -> min
+                                  | _ -> failwith "Sum Ting Wong" in
+                          let new_m = {m with hp = m.hp + sp.mag} in
+                          let new_c = {c with cat = Minion new_m} in
+                          print_endline ("AI healed your minion" ^ new_c.name);
+                          let new_mins = List.filter (fun card -> card <> c)
+                                         p.minions in
+                          let new_p = {p with minions = new_c::new_mins} in
+                          {st with players = (new_p,ai)}))
+                | Dmg -> (if p.minions=[] then
+                            (print_endline "You have no minions in play for AI to attack";
+                            st)
+                         else (
+                         let mins_dmg = List.map
+                                       (fun c -> match c.cat with
+                                                 | Minion m -> (m.attack,c)
+                                                 | _ -> failwith "Sum ting wong")
+                                       p.minions in
+                         let cankill = List.filter
+                                       (fun (_,c) -> match c.cat with
+                                                     | Minion m -> m.hp<=sp.mag
+                                                     | _ -> failwith "Sum ting wong")
+                                       mins_dmg in
+                         let c = if cankill=[] then (List.sort compare mins_dmg)
+                                   |> List.rev |> List.hd |> snd
+                                 else (List.sort compare cankill) |> List.rev |>
+                                   List.hd |> snd
+                                 in
+                         let m = match c.cat with Minion min -> min
+                                 | _ -> failwith "Sum Ting Wong" in
+                         let new_m = {m with hp = m.hp - sp.mag} in
+                         let new_c = {c with cat = Minion new_m} in
+                         print_endline ("You have hurt the opponent's minion" ^ new_c.name);
+                         let new_mins = List.filter (fun card -> card <> c)
+                                        p.minions in
+                         let new_p = {p with minions = new_c::new_mins} in
+                         {st with players = (new_p,ai)}))
+                | Mana -> print_endline "No mana effect on minions"; st)
+    | Any ->  (match sp.effect with
+              | Heal -> (if ai.minions=[] then play_spell st {sp with target = Me}
+                        else (
+                        if ai.hp <= 5 then play_spell st {sp with target = Me}
+                        else if ai.hp <= 15 then
+                          (let n = (Random.int 3) in
+                          if n<2 then play_spell st {sp with target = Me}
+                          else play_spell st {sp with target = Mine})
+                        else play_spell st {sp with target = Mine})
+                        )
+              | Dmg -> (if (can_kill st {sp with target = Them}) then
+                           play_spell st {sp with target = Them}
+                       else if p.minions = [] then
+                               play_spell st {sp with target = Them}
+                       else if (can_kill st {sp with target = Theirs}) then
+                               play_spell st {sp with target = Theirs}
+                       else (let n = (Random.int 3) in
+                            if n<2 then play_spell st {sp with target = Theirs}
+                            else play_spell st {sp with target = Them}
+                            )
+                       )
+              | Mana -> (play_spell st {sp with target = Me})
+             )
+
+  let rec play_card st hand =
+    if st.first_player then failwith "Sum Ting Wong"
+    else
+    let ai = snd st.players in
+    match hand with
+    | [] -> (print_endline "AI has no more cards to play"; st)
+    | card::t -> (match card.cat with
+              | Spell sp -> (if ai.mana<card.cost then play_card st t
+                            else
+                            let new_mana = ai.mana - card.cost in
+                            let new_hand = List.filter (fun c -> c <> card) ai.hand in
+                            let new_ai = {ai with mana =new_mana; hand = new_hand} in
+                            print_endline ("AI used the spell " ^ card.name);
+                            let new_st = play_spell {st with
+                              players=(fst st.players, new_ai)} sp in
+                            play_card new_st t
+                            )
+              | Minion m -> (if ai.mana<card.cost then play_card st t
+                            else
+                            let new_mana = ai.mana - card.cost in
+                            let new_hand = List.filter (fun c -> c <> card) ai.hand in
+                            let new_mins = card::ai.minions in
+                            let new_ai = {ai with mana =new_mana;
+                              hand = new_hand; minions = new_mins} in
+                            print_endline ("AI played the minion " ^ card.name);
+                            let new_st = {st with players=(fst st.players, new_ai)} in
+                            play_card new_st t
+                            )
+              | Weapon wp -> (if ai.mana<card.cost then play_card st t
+                             else
+                             let new_mana = ai.mana - card.cost in
+                             let new_hand = List.filter (fun c -> c<>card) ai.hand in
+                             let new_weap = Some card in
+                             let new_ai = {ai with mana=new_mana; hand=new_hand;
+                               weap = new_weap} in
+                             print_endline ("AI has equipped the weapon"
+                               ^ card.name);
+                             let new_st = {st with players=(fst st.players, new_ai)} in
+                             play_card new_st t
+                             )
+              )
+
+
+  let pre_phase st =
+    if st.first_player then failwith "Sum Ting Wong"
+    else
+    let pre_st = start_turn st in
+    print_state {pre_st with first_player = true};
+    let ai = snd st.players in
+    play_card pre_st ai.hand
+
+  let attack_phase st =
+    st
+
+  let post_phase st =
+    if st.first_player then failwith "Sum ting wong" else
+    let _ = Sys.command "clear" in
+    print_state {st with first_player = true};
+    let ai = snd st.players in
+    let new_state = play_card st ai.hand in
+    let new_ai = snd new_state.players in
+    if (new_ai.weap = None && new_ai.hand = [] && new_ai.deck = [] &&
+      new_ai.minions = []) then raise GameOver
+    else end_turn new_state
 end
 
