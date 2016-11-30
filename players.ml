@@ -602,7 +602,7 @@ struct
     else
     let ai = snd st.players in
     match hand with
-    | [] -> (print_endline "AI has no more cards to play"; st)
+    | [] -> (Unix.sleep(2); print_endline "AI is done playing cards"; st)
     | card::t -> (match card.cat with
               | Spell sp -> (if ai.mana<card.cost then play_card st t
                             else
@@ -612,6 +612,7 @@ struct
                             print_endline ("AI used the spell " ^ card.name);
                             let new_st = play_spell {st with
                               players=(fst st.players, new_ai)} sp in
+                            Unix.sleep(2);
                             play_card new_st t
                             )
               | Minion m -> (if ai.mana<card.cost then play_card st t
@@ -623,6 +624,7 @@ struct
                               hand = new_hand; minions = new_mins} in
                             print_endline ("AI played the minion " ^ card.name);
                             let new_st = {st with players=(fst st.players, new_ai)} in
+                            Unix.sleep(2);
                             play_card new_st t
                             )
               | Weapon wp -> (if ai.mana<card.cost then play_card st t
@@ -635,6 +637,7 @@ struct
                              print_endline ("AI has equipped the weapon"
                                ^ card.name);
                              let new_st = {st with players=(fst st.players, new_ai)} in
+                             Unix.sleep(2);
                              play_card new_st t
                              )
               )
@@ -646,6 +649,7 @@ struct
     let pre_st = start_turn st in
     print_state {pre_st with first_player = true};
     let ai = snd st.players in
+    Unix.sleep(2);
     play_card pre_st ai.hand
 
   let attack_phase st =
@@ -768,7 +772,7 @@ struct
     let start_attack s =
       let a = string_of_int (!hero_attack) in
       print_state ({s with first_player = true});
-      print_endline ("AI hero has " ^ a ^ "attack."); s in
+      print_endline ("AI hero has " ^ a ^ " attack."); s in
     let _ = Sys.command "clear" in
     new_state |> start_attack |> end_state
 
@@ -778,6 +782,7 @@ struct
     print_state {st with first_player = true};
     let ai = snd st.players in
     let new_state = play_card st ai.hand in
+    Unix.sleep(2);
     let new_ai = snd new_state.players in
     if (new_ai.weap = None && new_ai.hand = [] && new_ai.deck = [] &&
       new_ai.minions = []) then raise GameOver

@@ -111,14 +111,12 @@ let rec print_minionlist l =
 
 
 let print_state st =
-  let player_num = if st.first_player then " 1" else " 2" in
   let plyr = if st.first_player
                then st.players |> fst
                else st.players |> snd in
   let other_plyr = if st.first_player
                then st.players |> snd
                else st.players |> fst in
-  print_endline ("Player" ^ player_num ^ "'s turn.");
   print_endline "State of game:";
   print_endline "";
   print_endline ("Your HP: " ^ (string_of_int plyr.hp));
