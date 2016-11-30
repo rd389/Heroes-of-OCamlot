@@ -26,8 +26,10 @@ struct
       let new_hand = card::plyr.hand in
       let new_plyr = {plyr with hand = new_hand; deck = new_deck} in
       print_card card; new_plyr
-    else let () = print_endline "nothing. The deck is empty." in plyr
+    else let () = print_endline "nothing. The deck is empty" in plyr
 
+  (* [replenish_mana st] Returns the state after replenishing the current
+   * player's mana in state [st] based on the turn number in that state. *)
   let replenish_mana st =
     let player = match st.first_player with
                  | true -> fst st.players
@@ -51,10 +53,17 @@ struct
     | true -> {st with first_player = false}
     | false -> {st with turn = st.turn+1; first_player = true}
 
+  (* [pick_minion p s] returns player [p]'s minion card indicated by string [s].
+   * Prompts player to pick a minion in play is input [s] is not a minion in
+   * play. *)
   let rec pick_minion p s : card =
     try List.hd (List.filter (fun c -> s = c.name) p.minions) with
-    | _ -> print_endline "Not a minion in play"; pick_minion p s
+    | _ -> print_endline "Not a minion in play"; pick_minion p (read_line ())
 
+  (* [play_spell st sp] returns the state after a player plays the spell [sp] in
+   * state [st], based on the target and effect of the spell. The necessary
+   * prompts are used when there is a choice in who the player wishes to use
+   * the spell on. *)
   let rec play_spell st sp =
     let p = match st.first_player with
             | true -> fst st.players
@@ -175,16 +184,20 @@ struct
                          | true -> {st with players = (p,new_op)}
                          | false -> {st with players = (new_op,p)})
                 | Mana -> print_endline "No mana effect on minions"; st)
-    | Any ->  print_string "Choose a target (Me, Them, Mine, or Theirs).\n> ";
+    | Any ->  print_string "Choose a target (Me, Them, Mine, or Theirs)\n> ";
               (match (read_line ()) with
               | "Me" -> (play_spell st {sp with target = Me})
               | "Them" -> (play_spell st {sp with target = Them})
               | "Mine" -> (play_spell st {sp with target = Mine})
               | "Theirs" -> (play_spell st {sp with target = Theirs})
-              | _ -> (print_endline "Invalid target.";
+              | _ -> (print_endline "Invalid target";
                      play_spell st sp)
              )
 
+  (* [pick_card p] Prompts the player [p] to pick a card in their hand to play;
+   * reprompts player to pick a card if the input is not a card in their hand.
+   * Returns a card option associated with the card picked, or no card if the
+   * player so chooses. *)
   let rec pick_card p =
     let s = print_string "Play a card in your hand\n> "; read_line () in
     match s with
@@ -193,6 +206,8 @@ struct
            | _ -> (let () = print_endline "This card is not in your hand" in
                   pick_card p))
 
+  (* [choose_card st] returns the state after the current player plays a card in
+   * state [st]. *)
   let rec choose_card st =
     let p = match st.first_player with
             | true -> fst st.players
@@ -244,6 +259,8 @@ struct
                                               (fst st.players, new_p)} sp)
                    )
 
+  (* [play_card state] prompts the current player to play cards until they wish
+   * to stop doing so. *)
   let rec play_card state =
     let s = print_string "Do you want to play a card?(y/n)\n> ";
       read_line () in
@@ -251,7 +268,7 @@ struct
     | "n" -> state
     | "y" -> print_endline "(type \"end\" to stop)";
                 (choose_card state) |> play_card
-    | _ -> print_endline "Command not understood. Please type y or n.";
+    | _ -> print_endline "Command not understood. Please type y or n";
            play_card state
 
   let pre_phase st =
@@ -315,33 +332,33 @@ struct
                       print_endline msg; print_string "> ";
                       if(get_ans ()) then
                        (if(health <= a) then
-                          (print_endline ((format_minion h) ^ " has been slain."); t)
-                        else (print_endline ((format_minion h) ^ " is now " ^ (format_minion new_min));
+                          (print_endline ((format_minion h) ^ " has been slain"); t)
+                        else (print_endline (them ^ "'s " ^ (format_minion h) ^
+                                " is now a " ^ (format_minion new_min));
                           new_min::t))
                       else h::(attack_minion targ t))
                     else(h::(attack_minion targ t)) in
         let rec attack_hero at =
-          if(!opp.armor <> 0) then
-            ( let new_armor = (!opp).armor - a in
-              if new_armor <= 0 then
-                (opp := {!opp with armor = 0};
-                 print_endline (them ^ "'s Armor: 0"); attack_hero (~- new_armor)
-                )
-              else(opp := {!opp with armor = new_armor};
-                   print_endline (them ^ "'s Armor: " ^ (string_of_int new_armor)));
-                   print_endline (them ^ "'s HP: " ^(string_of_int (!opp).hp))
-              )
-          else (let new_hp = (!opp).hp - a in
-                if new_hp <= 0 then raise GameOver
-                else (opp := {!opp with hp = new_hp};
-                  print_endline (them ^ "'s HP: " ^ (string_of_int new_hp)))) in
+          let new_armor = (!opp).armor - a in
+          if(new_armor <= 0) then
+           (let new_hp = (!opp).hp + new_armor in
+            opp := {!opp with armor = 0; hp = new_hp};
+            print_endline (them ^ "'s Armor: 0");
+            print_endline (them ^ "'s HP: " ^(string_of_int (!opp).hp));
+            if (new_hp <= 0) then raise GameOver else ();
+           )
+          else(
+            opp := {!opp with armor = new_armor};
+            print_endline (them ^ "'s Armor: " ^(string_of_int (!opp).armor));
+            print_endline (them ^ "'s HP: " ^(string_of_int (!opp).hp));
+            ) in
         match read_line () with
         | "" -> ()
         | x when x = them -> attack_hero a
         | y -> (if (List.exists (fun c -> c.name = y) (!theirs)) then
                   ( let mins = attack_minion y (!theirs) in
                     theirs := mins)
-                else (print_string "Invalid target, try again.\n> ";
+                else (print_string "Invalid target, try again\n> ";
                   get_target a)) in
       let alter_weap () =
         match (!player).weap with
@@ -376,7 +393,7 @@ struct
     let start_attack s =
       let a= string_of_int (!hero_attack) in
       print_state s;
-      print_endline ("Your hero has " ^ a ^ " attack."); s in
+      print_endline ("Your hero has " ^ a ^ " attack"); s in
     let _ = Sys.command "clear" in
     new_state |> start_attack |> end_state
 
@@ -407,6 +424,8 @@ struct
       new_plyr
     else (print_endline "AI's deck is empty"; plyr)
 
+  (* [replenish_mana st] Returns the state after replenishing the AI's mana
+   * in state [st] based on the turn number in that state. *)
   let replenish_mana st =
     if st.first_player then failwith "Sum Ting Wong"
     else
@@ -429,6 +448,8 @@ struct
     | true -> failwith "Sum Ting Wong"
     | false -> {st with turn = st.turn+1; first_player = true}
 
+  (* [can_kill st sp] returns true if spell [sp] can kill either Player 1 or any
+   * of Player 1's minions in state [st]. Otherwise returns false. *)
   let can_kill st sp =
     if st.first_player then failwith "Sum Ting Wong" else
     let (p,ai) = st.players in
@@ -446,6 +467,8 @@ struct
                 boo)
     | _ -> (failwith "Sum ting wong")
 
+  (* [play_spell st sp] returns the state after the AI plays spell [sp] in state
+   * [st]. *)
   let rec play_spell st sp =
     if st.first_player then failwith "Sum Ting Wong" else
     let (p,ai) = st.players in
@@ -597,6 +620,8 @@ struct
               | Mana -> (play_spell st {sp with target = Me})
              )
 
+  (* [play_card st hand] returns the state after the AI plays cards in its hand
+   * [hand] in state [st]. *)
   let rec play_card st hand =
     if st.first_player then failwith "Sum Ting Wong"
     else
@@ -634,7 +659,7 @@ struct
                              let new_weap = Some card in
                              let new_ai = {ai with mana=new_mana; hand=new_hand;
                                weap = new_weap} in
-                             print_endline ("AI has equipped the weapon"
+                             print_endline ("AI has equipped the weapon "
                                ^ card.name);
                              let new_st = {st with players=(fst st.players, new_ai)} in
                              Unix.sleep(2);
@@ -649,7 +674,8 @@ struct
     let pre_st = start_turn st in
     print_state {pre_st with first_player = true};
     let ai = snd st.players in
-    Unix.sleep(2);
+    print_endline "AI is thinking...";
+    Unix.sleep(5);
     play_card pre_st ai.hand
 
   let attack_phase st =
@@ -695,50 +721,49 @@ struct
       List.fold_left
         (fun a c -> if (get_min_attack a) < (get_min_attack c) then c
                       else a) (List.hd ms) ms in
-    let attack_a_minion () = if (Random.int 3) < 2 then true else false in
+    let attack_a_minion () = (Random.int 5) < 4 in
     let rec target ms =
       let get_target a =
-        let rec attack_hero at =
+        let rec attack_hero () =
+          let new_armor = (!opp).armor - a in
           print_endline "P1";
-          Unix.sleep(1);
-          if(!opp.armor <> 0) then
-            ( let new_armor = (!opp).armor - a in
-              if new_armor <= 0 then
-                (opp := {!opp with armor = 0};
-                 print_endline ("Your Armor: 0"); attack_hero (~- new_armor)
-                )
-              else(opp := {!opp with armor = new_armor};
-                   print_endline ("Your Armor: " ^ (string_of_int new_armor)));
-                   print_endline ("Your HP: " ^(string_of_int (!opp).hp))
-              )
-          else (let new_hp = (!opp).hp - a in
-                if new_hp <= 0 then raise GameOver
-                else (opp := {!opp with hp = new_hp};
-                  print_endline ("Your HP: " ^ (string_of_int new_hp)))) in
+          Unix.sleep(2);
+          if(new_armor <= 0) then
+           (let new_hp = (!opp).hp + new_armor in
+            opp := {!opp with armor = 0; hp = new_hp};
+            print_endline ("Your Armor: 0");
+            print_endline ("Your HP: " ^(string_of_int (!opp).hp));
+            if (new_hp <= 0) then raise GameOver else ();
+           )
+          else(
+            opp := {!opp with armor = new_armor};
+            print_endline ("Your Armor: " ^(string_of_int (!opp).armor));
+            print_endline ("Your HP: " ^(string_of_int (!opp).hp));
+            ) in
         let rec attack_minion m ts =
           match ts with
           | [] -> []
-          | h::t -> if(h = m) then
-                     (let health = get_min_health h in
+          | h::t ->(if(h = m) then
+                     (let new_health = (get_min_health h) - a in
                       let new_cat = match h.cat with
-                                    | Minion c -> Minion({c with hp = health - a})
+                                    | Minion c -> Minion({c with hp = new_health})
                                     | _ -> h.cat in
                       let new_min = {h with cat = new_cat} in
                       print_endline (format_minion h);
-                      Unix.sleep(1);
-                      if(health <= a) then
-                       (print_endline ((format_minion h) ^ " has been slain."); t)
-                      else (print_endline ("Your" ^ (format_minion h) ^ " is now " ^
-                              (format_minion new_min)); new_min::t))
-                    else(h::(attack_minion m t)) in
+                      Unix.sleep(2);
+                      if(new_health <= 0) then
+                       (print_endline ("Your "^(format_minion h)^" has been slain"); t)
+                      else (print_endline ("Your "^(format_minion h)^" is now a "
+                              ^(format_minion new_min)); new_min::t))
+                    else(h::(attack_minion m t))) in
         if (((!opp).hp + (!opp).armor) <= a) then
-          (raise GameOver)
+          (attack_hero ())
         else (
           match (get_killable (!theirs) a) with
           | [] -> if(attack_a_minion ()) then
                     theirs := attack_minion (max_att !theirs) (!theirs)
                   else
-                    attack_hero a
+                    attack_hero ()
           | l -> theirs := (attack_minion (max_att l) (!theirs))) in
       let alter_weap () =
         match (!player).weap with
@@ -752,40 +777,39 @@ struct
                                     let new_weap = Weapon {w with durability = new_dur} in
                                     let new_c = {c with cat = new_weap} in
                                     print_endline("Weapon durability -> " ^ (string_of_int new_dur));
+                                    Unix.sleep(2);
                                     player := {!player with weap = Some new_c})
                     | _ -> print_endline "Sum ting wong" ) in
       Unix.sleep(2);
       match ms with
       | [] -> if(!hero_attack <> 0) then
-               (print_string "AI: hero's target: "; Unix.sleep(1);
+               (print_endline "AI: Picking hero's target..."; Unix.sleep(2);
+                print_string "Target: ";
                 get_target (!hero_attack); alter_weap (); )
               else ();
-              print_endline "Press Enter/Return"; ignore (read_line ());
-      | h::t ->(print_string ("AI: " ^ (format_minion h) ^ "'s target: ");
-                Unix.sleep(1);
+      | h::t ->(print_endline ("AI: Picking " ^ (format_minion h) ^ "'s target...");
+                Unix.sleep(2);
+                print_string "Target: ";
                 match h.cat with
                 | Minion c -> get_target c.attack; target t;
-                |  _ -> print_endline "Sum ting wong"; ); in
+                |  _ -> print_endline "Sum ting wong"; );
+      opp := {!opp with minions = !theirs} in
     let end_state s =
       target (!player).minions;
       {s with players = (!opp, !player)} in
     let start_attack s =
       let a = string_of_int (!hero_attack) in
+      ignore (Sys.command "clear");
       print_state ({s with first_player = true});
-      print_endline ("AI hero has " ^ a ^ " attack."); s in
-    let _ = Sys.command "clear" in
+      print_endline ("AI hero has " ^ a ^ " attack"); s in
     new_state |> start_attack |> end_state
 
   let post_phase st =
     if st.first_player then failwith "Sum ting wong" else
-    let _ = Sys.command "clear" in
-    print_state {st with first_player = true};
     let ai = snd st.players in
-    let new_state = play_card st ai.hand in
-    Unix.sleep(2);
-    let new_ai = snd new_state.players in
-    if (new_ai.weap = None && new_ai.hand = [] && new_ai.deck = [] &&
-      new_ai.minions = []) then raise GameOver
-    else end_turn new_state
+    if (ai.weap = None && ai.hand = [] && ai.deck = [] &&
+      ai.minions = []) then raise GameOver
+    else (print_endline "AI is ending its turn";
+         Unix.sleep(3); end_turn st)
 end
 

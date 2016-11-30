@@ -46,6 +46,7 @@ type state = {
   players : hero * hero;
 }
 
+(* [bonuses l] sequentially prints the bonuses in list [l]. *)
 let rec bonuses l =
   match l with
   | [] -> ""
@@ -55,39 +56,8 @@ let rec bonuses l =
                             | Attack -> ("Att " ^ (string_of_int mag))) in
                     b ^ (bonuses t)
 
-let print_card c =
-  let typ = match c.cat with
-  | Minion _ -> "Minion"
-  | Spell _ -> "Spell"
-  | Weapon _ -> "Weapon" in
-  let cost = string_of_int c.cost in
-  let desc = match c.cat with
-             | Minion m -> ("HP " ^ (string_of_int m.hp) ^ ", Att " ^
-                           (string_of_int m.attack) ^ ", " ^
-                           "Bonuses: [" ^ (bonuses m.bonus) ^ "]")
-             | Spell sp -> let targ = match sp.target with
-                                      | All -> "All" | Me -> "Me"
-                                      | Them -> "Them" | Mine -> "Mine"
-                                      | Theirs -> "Theirs" | Any -> "Any" in
-                           let eff = match sp.effect with
-                                     | Heal -> "Heal" | Dmg -> "Dmg"
-                                     | Mana -> "Mana" in
-                           ("Target " ^ targ ^ ", " ^ eff ^ " " ^(string_of_int sp.mag))
-             | Weapon wp -> ("Dmg " ^ (string_of_int wp.dmg) ^ ", " ^ "Dur " ^ (string_of_int wp.durability))
-             in
-  print_endline (typ ^ " : " ^ c.name ^ ", costs " ^ cost ^ " - " ^ desc)
-
-let print_weap_notype wc =
-  let cost = string_of_int wc.cost in
-  let wp = match wc.cat with Weapon w -> w | _ -> failwith "Sum Ting Wong" in
-  let desc = ("Dmg " ^ (string_of_int wp.dmg) ^ ", " ^ "Dur " ^ (string_of_int wp.durability)) in
-  print_endline (wc.name ^ ", costs " ^ cost ^ " - " ^ desc)
-
-let rec print_card_list l =
-  match l with
-  | [] -> ()
-  | h::t -> print_card h; print_card_list t
-
+(* [print_bonuses l] sequentially prints the bonuses in list [l], with new lines
+ * and indents after each bonus. *)
 let rec print_bonuses l =
   match l with
   | [] -> ()
@@ -97,7 +67,8 @@ let rec print_bonuses l =
                     | Attack -> print_endline ("    Att " ^ (string_of_int mag))) in
                     print_bonuses t
 
-
+(* [print_minionlist l] prints the list of minions [l] and their attributes in
+ * the current state. *)
 let rec print_minionlist l =
   match l with
   | [] -> ()
@@ -109,6 +80,41 @@ let rec print_minionlist l =
             print_endline ("  Bonuses:");
             print_bonuses m.bonus
 
+(* [print_weap_notype wc] prints weapon card [wc] without printing "Weapon : "
+ * beforehand. *)
+let print_weap_notype wc =
+  let cost = string_of_int wc.cost in
+  let wp = match wc.cat with Weapon w -> w | _ -> failwith "Sum Ting Wong" in
+  let desc = ("Dmg " ^ (string_of_int wp.dmg) ^ ", " ^ "Dur " ^
+    (string_of_int wp.durability)) in
+  print_endline (wc.name ^ ", costs " ^ cost ^ " - " ^ desc)
+
+let print_card c =
+  let typ = match c.cat with
+  | Minion _ -> "Minion"
+  | Spell _ -> "Spell"
+  | Weapon _ -> "Weapon" in
+  let cost = string_of_int c.cost in
+  let desc = match c.cat with
+             | Minion m -> ("Att " ^ (string_of_int m.attack) ^ ", HP " ^
+                           (string_of_int m.hp) ^ ", " ^
+                           "Bonuses: [" ^ (bonuses m.bonus) ^ "]")
+             | Spell sp -> let targ = match sp.target with
+                                      | All -> "All" | Me -> "Me"
+                                      | Them -> "Them" | Mine -> "Mine"
+                                      | Theirs -> "Theirs" | Any -> "Any" in
+                           let eff = match sp.effect with
+                                     | Heal -> "Heal" | Dmg -> "Dmg"
+                                     | Mana -> "Mana" in
+                           ("Target " ^ targ ^ ", " ^ eff ^ " " ^(string_of_int sp.mag))
+             | Weapon wp -> ("Dmg " ^ (string_of_int wp.dmg) ^ ", " ^ "Dur " ^
+                              (string_of_int wp.durability)) in
+  print_endline (typ ^ " : " ^ c.name ^ ", costs " ^ cost ^ " - " ^ desc)
+
+let rec print_card_list l =
+  match l with
+  | [] -> ()
+  | h::t -> print_card h; print_card_list t
 
 let print_state st =
   let plyr = if st.first_player
