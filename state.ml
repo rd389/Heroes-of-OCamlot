@@ -96,8 +96,8 @@ let print_card c =
   | Weapon _ -> "Weapon" in
   let cost = string_of_int c.cost in
   let desc = match c.cat with
-             | Minion m -> ("HP " ^ (string_of_int m.hp) ^ ", Att " ^
-                           (string_of_int m.attack) ^ ", " ^
+             | Minion m -> ("Att " ^ (string_of_int m.attack) ^ ", HP " ^
+                           (string_of_int m.hp) ^ ", " ^
                            "Bonuses: [" ^ (bonuses m.bonus) ^ "]")
              | Spell sp -> let targ = match sp.target with
                                       | All -> "All" | Me -> "Me"
@@ -107,8 +107,8 @@ let print_card c =
                                      | Heal -> "Heal" | Dmg -> "Dmg"
                                      | Mana -> "Mana" in
                            ("Target " ^ targ ^ ", " ^ eff ^ " " ^(string_of_int sp.mag))
-             | Weapon wp -> ("Dmg " ^ (string_of_int wp.dmg) ^ ", " ^ "Dur " ^ (string_of_int wp.durability))
-             in
+             | Weapon wp -> ("Dmg " ^ (string_of_int wp.dmg) ^ ", " ^ "Dur " ^
+                              (string_of_int wp.durability)) in
   print_endline (typ ^ " : " ^ c.name ^ ", costs " ^ cost ^ " - " ^ desc)
 
 let rec print_card_list l =
