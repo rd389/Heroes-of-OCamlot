@@ -154,7 +154,7 @@ let play (module P1 : Player) (module P2 : Player) =
              P2.post_phase |> finish_turn |> clear_terminal
       )
       |> play_game )
-    with _ -> st in
+    with GameOver -> print_endline "GameOver"; st in
 
   (* [end_game st] ends the game in state st, and indicates which player has won.
    *)

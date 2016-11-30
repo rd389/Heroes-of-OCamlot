@@ -769,7 +769,7 @@ struct
           (attack_hero ())
         else (
           match (get_killable (!theirs) a) with
-          | [] -> if(attack_a_minion ()) then
+          | [] -> if (attack_a_minion ()) && (!theirs <> []) then
                     theirs := attack_minion (max_att !theirs) (!theirs)
                   else
                     attack_hero ()
