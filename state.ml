@@ -78,7 +78,8 @@ let rec print_minionlist l =
             print_endline ("  HP = " ^ (string_of_int m.hp));
             print_endline ("  Attack = " ^ (string_of_int m.attack));
             print_endline ("  Bonuses:");
-            print_bonuses m.bonus
+            print_bonuses m.bonus;
+            print_minionlist t
 
 (* [print_weap_notype wc] prints weapon card [wc] without printing "Weapon : "
  * beforehand. *)

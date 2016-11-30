@@ -124,7 +124,10 @@ struct
                         match st.first_player with
                         | true -> {st with players = (p,new_op)}
                         | false -> {st with players = (new_op,p)}))
-    | Mine -> (match sp.effect with
+    | Mine -> if p.minions = []
+              then (print_endline "Can't use spell; you have no minions in play"; st)
+              else
+              (match sp.effect with
               | Heal -> print_string "Choose one of your minions to heal\n> ";
                        (let s = read_line () in
                         let c = pick_minion p s in
@@ -154,7 +157,10 @@ struct
                        | true -> {st with players = (new_p,op)}
                        | false -> {st with players = (op,new_p)})
               | Mana -> print_endline "No mana effect on minions"; st)
-    | Theirs -> (match sp.effect with
+    | Theirs -> if op.minions = []
+                then (print_endline "Can't use spell; opponent has no minions in play"; st)
+                else
+                (match sp.effect with
                 | Heal -> print_string "Choose one of the opponent's minions to heal\n> ";
                          (let s = read_line () in
                           let c = pick_minion op s in
