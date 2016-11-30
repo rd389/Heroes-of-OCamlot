@@ -2,6 +2,7 @@ open State
 
 exception Unimplemented
 exception GameOver
+exception GameOverOpp
 
 module type Player = sig
   val is_human : bool
@@ -91,6 +92,8 @@ struct
                                   in
                      print_endline ("You have hurt yourself! Now your health is " ^
                                    (string_of_int new_p.hp));
+                     if new_p.hp<=0 then raise GameOverOpp
+                     else
                      match st.first_player with
                      | true -> {st with players = (new_p,op)}
                      | false -> {st with players = (op,new_p)})
@@ -115,6 +118,8 @@ struct
                                      in
                        print_endline ("You have hurt the opponent! Now their health is " ^
                                       (string_of_int new_op.hp));
+                       if new_op.hp<=0 then raise GameOver
+                       else
                        match st.first_player with
                        | true -> {st with players = (p,new_op)}
                        | false -> {st with players = (new_op,p)})
@@ -135,7 +140,7 @@ struct
                                 | _ -> failwith "Error" in
                         let new_m = {m with hp = m.hp + sp.mag} in
                         let new_c = {c with cat = Minion new_m} in
-                        print_endline ("You have healed your minion" ^ new_c.name);
+                        print_endline ("You have healed your minion " ^ new_c.name);
                         let new_mins = List.filter (fun card -> card <> c)
                                        p.minions in
                         let new_p = {p with minions = new_c::new_mins} in
@@ -149,10 +154,14 @@ struct
                                | _ -> failwith "Error" in
                        let new_m = {m with hp = m.hp - sp.mag} in
                        let new_c = {c with cat = Minion new_m} in
-                       print_endline ("You have hurt your minion" ^ new_c.name);
+                       print_endline ("You have hurt your minion " ^ new_c.name);
                        let new_mins = List.filter (fun card -> card <> c)
                                       p.minions in
-                       let new_p = {p with minions = new_c::new_mins} in
+                       let new_p = if new_m.hp<=0 then
+                         (print_endline
+                         ("You have slain your minion " ^ new_c.name);
+                         {p with minions = new_mins})
+                         else {p with minions = new_c::new_mins} in
                        match st.first_player with
                        | true -> {st with players = (new_p,op)}
                        | false -> {st with players = (op,new_p)})
@@ -168,7 +177,7 @@ struct
                                   | _ -> failwith "Error" in
                           let new_m = {m with hp = m.hp + sp.mag} in
                           let new_c = {c with cat = Minion new_m} in
-                          print_endline ("You have healed the opponent's minion" ^ new_c.name);
+                          print_endline ("You have healed the opponent's minion " ^ new_c.name);
                           let new_mins = List.filter (fun card -> card <> c)
                                          op.minions in
                           let new_op = {op with minions = new_c::new_mins} in
@@ -182,10 +191,13 @@ struct
                                  | _ -> failwith "Error" in
                          let new_m = {m with hp = m.hp - sp.mag} in
                          let new_c = {c with cat = Minion new_m} in
-                         print_endline ("You have hurt the opponent's minion" ^ new_c.name);
+                         print_endline ("You have hurt the opponent's minion " ^ new_c.name);
                          let new_mins = List.filter (fun card -> card <> c)
                                         op.minions in
-                         let new_op = {op with minions = new_c::new_mins} in
+                         let new_op = if new_m.hp<=0 then
+                           (print_endline ("You have slain the opponent's minion " ^ new_c.name);
+                           {op with minions = new_mins})
+                           else {op with minions = new_c::new_mins} in
                          match st.first_player with
                          | true -> {st with players = (p,new_op)}
                          | false -> {st with players = (new_op,p)})
@@ -414,7 +426,7 @@ struct
                      | true -> fst new_state.players
                      | false -> snd new_state.players in
     if (new_player.weap = None && new_player.hand = [] && new_player.deck = []
-    && new_player.minions = []) then raise GameOver
+    && new_player.minions = []) then raise GameOverOpp
     else end_turn new_state
 end
 
@@ -458,7 +470,8 @@ struct
     | false -> {st with turn = st.turn+1; first_player = true}
 
   (* [can_kill st sp] returns true if spell [sp] can kill either Player 1 or any
-   * of Player 1's minions in state [st]. Otherwise returns false. *)
+   * of Player 1's minions (depending on the target of the spell) in state [st].
+   * Otherwise returns false. *)
   let can_kill st sp =
     if st.first_player then failwith "Error" else
     let (p,ai) = st.players in
@@ -499,7 +512,7 @@ struct
                                    in
                      print_endline ("AI has hurt itself! AI's health is now " ^
                                    (string_of_int new_ai.hp));
-                     if ai.hp <= 0 then raise GameOver else
+                     if new_ai.hp <= 0 then raise GameOverOpp else
                      {st with players = (p,new_ai)})
             | Mana -> (let new_ai = {ai with mana = ai.mana + sp.mag} in
                       print_endline ("AI boosted its mana! Now AI's mana is " ^
@@ -558,7 +571,11 @@ struct
                        print_endline ("AI hurt its own minion" ^ new_c.name);
                        let new_mins = List.filter (fun card -> card <> c)
                                       ai.minions in
-                       let new_ai = {ai with minions = new_c::new_mins} in
+                       let new_ai =
+                         if new_m.hp<=0 then (print_endline
+                          ("AI has slain its minion" ^ new_c.name);
+                          {ai with minions=new_mins})
+                         else {ai with minions = new_c::new_mins} in
                        {st with players = (p,new_ai)}))
               | Mana -> print_endline "No mana effect on minions"; st)
     | Theirs -> (match sp.effect with
@@ -599,10 +616,15 @@ struct
                                  | _ -> failwith "Error" in
                          let new_m = {m with hp = m.hp - sp.mag} in
                          let new_c = {c with cat = Minion new_m} in
-                         print_endline ("You have hurt the opponent's minion" ^ new_c.name);
+                         print_endline ("AI hurt your minion" ^ new_c.name);
                          let new_mins = List.filter (fun card -> card <> c)
                                         p.minions in
-                         let new_p = {p with minions = new_c::new_mins} in
+                         let new_p =
+                           if new_m.hp<=0 then (print_endline
+                             ("AI has slain your minion" ^ new_c.name);
+                             {p with minions = new_mins})
+                           else
+                           {p with minions = new_c::new_mins} in
                          {st with players = (new_p,ai)}))
                 | Mana -> print_endline "No mana effect on minions"; st)
     | Any ->  (match sp.effect with
@@ -817,7 +839,7 @@ struct
     if st.first_player then failwith "Error" else
     let ai = snd st.players in
     if (ai.weap = None && ai.hand = [] && ai.deck = [] &&
-      ai.minions = []) then raise GameOver
+      ai.minions = []) then raise GameOverOpp
     else (print_endline "AI is ending its turn";
          Unix.sleep(3); end_turn st)
 end

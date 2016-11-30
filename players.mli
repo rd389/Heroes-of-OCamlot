@@ -2,6 +2,7 @@ open State
 
 exception Unimplemented
 exception GameOver
+exception GameOverOpp
 
 (* A [Player] runs each phase of a player's turn *)
 module type Player = sig

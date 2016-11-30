@@ -154,7 +154,11 @@ let play (module P1 : Player) (module P2 : Player) =
              P2.post_phase |> finish_turn |> clear_terminal
       )
       |> play_game )
-    with GameOver -> print_endline "GameOver"; st in
+    with | GameOver -> print_endline "Game Over"; st
+         | GameOverOpp -> print_endline "Game Over";
+                          {st with first_player= not (st.first_player)}
+         | _ -> failwith "Error"
+    in
 
   (* [end_game st] ends the game in state st, and indicates which player has won.
    *)
