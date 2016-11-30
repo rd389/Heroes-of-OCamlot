@@ -49,6 +49,9 @@ type state = {
   players : hero * hero;
 }
 
+(* Prints the attributes of a card in its current state. *)
 val print_card : card -> unit
+(* Prints the attributes of a list of cards in their current states. *)
 val print_card_list : card list -> unit
+(* Prints the current state. *)
 val print_state : state -> unit

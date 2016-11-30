@@ -28,6 +28,8 @@ struct
       print_card card; new_plyr
     else let () = print_endline "nothing. The deck is empty." in plyr
 
+  (* [replenish_mana st] Returns the state after replenishing the current
+   * player's mana in state [st] based on the turn number in that state. *)
   let replenish_mana st =
     let player = match st.first_player with
                  | true -> fst st.players
@@ -51,10 +53,17 @@ struct
     | true -> {st with first_player = false}
     | false -> {st with turn = st.turn+1; first_player = true}
 
+  (* [pick_minion p s] returns player [p]'s minion card indicated by string [s].
+   * Prompts player to pick a minion in play is input [s] is not a minion in
+   * play. *)
   let rec pick_minion p s : card =
     try List.hd (List.filter (fun c -> s = c.name) p.minions) with
-    | _ -> print_endline "Not a minion in play"; pick_minion p s
+    | _ -> print_endline "Not a minion in play"; pick_minion p (read_line ())
 
+  (* [play_spell st sp] returns the state after a player plays the spell [sp] in
+   * state [st], based on the target and effect of the spell. The necessary
+   * prompts are used when there is a choice in who the player wishes to use
+   * the spell on. *)
   let rec play_spell st sp =
     let p = match st.first_player with
             | true -> fst st.players
@@ -185,6 +194,10 @@ struct
                      play_spell st sp)
              )
 
+  (* [pick_card p] Prompts the player [p] to pick a card in their hand to play;
+   * reprompts player to pick a card if the input is not a card in their hand.
+   * Returns a card option associated with the card picked, or no card if the
+   * player so chooses. *)
   let rec pick_card p =
     let s = print_string "Play a card in your hand\n> "; read_line () in
     match s with
@@ -193,6 +206,8 @@ struct
            | _ -> (let () = print_endline "This card is not in your hand" in
                   pick_card p))
 
+  (* [choose_card st] returns the state after the current player plays a card in
+   * state [st]. *)
   let rec choose_card st =
     let p = match st.first_player with
             | true -> fst st.players
@@ -244,6 +259,8 @@ struct
                                               (fst st.players, new_p)} sp)
                    )
 
+  (* [play_card state] prompts the current player to play cards until they wish
+   * to stop doing so. *)
   let rec play_card state =
     let s = print_string "Do you want to play a card?(y/n)\n> ";
       read_line () in
@@ -407,6 +424,8 @@ struct
       new_plyr
     else (print_endline "AI's deck is empty"; plyr)
 
+  (* [replenish_mana st] Returns the state after replenishing the AI's mana
+   * in state [st] based on the turn number in that state. *)
   let replenish_mana st =
     if st.first_player then failwith "Sum Ting Wong"
     else
@@ -429,6 +448,8 @@ struct
     | true -> failwith "Sum Ting Wong"
     | false -> {st with turn = st.turn+1; first_player = true}
 
+  (* [can_kill st sp] returns true if spell [sp] can kill either Player 1 or any
+   * of Player 1's minions in state [st]. Otherwise returns false. *)
   let can_kill st sp =
     if st.first_player then failwith "Sum Ting Wong" else
     let (p,ai) = st.players in
@@ -446,6 +467,8 @@ struct
                 boo)
     | _ -> (failwith "Sum ting wong")
 
+  (* [play_spell st sp] returns the state after the AI plays spell [sp] in state
+   * [st]. *)
   let rec play_spell st sp =
     if st.first_player then failwith "Sum Ting Wong" else
     let (p,ai) = st.players in
@@ -597,6 +620,8 @@ struct
               | Mana -> (play_spell st {sp with target = Me})
              )
 
+  (* [play_card st hand] returns the state after the AI plays cards in its hand
+   * [hand] in state [st]. *)
   let rec play_card st hand =
     if st.first_player then failwith "Sum Ting Wong"
     else
@@ -649,7 +674,8 @@ struct
     let pre_st = start_turn st in
     print_state {pre_st with first_player = true};
     let ai = snd st.players in
-    Unix.sleep(2);
+    print_endline "AI is thinking...";
+    Unix.sleep(5);
     play_card pre_st ai.hand
 
   let attack_phase st =
@@ -778,14 +804,10 @@ struct
 
   let post_phase st =
     if st.first_player then failwith "Sum ting wong" else
-    let _ = Sys.command "clear" in
-    print_state {st with first_player = true};
     let ai = snd st.players in
-    let new_state = play_card st ai.hand in
-    Unix.sleep(2);
-    let new_ai = snd new_state.players in
-    if (new_ai.weap = None && new_ai.hand = [] && new_ai.deck = [] &&
-      new_ai.minions = []) then raise GameOver
-    else end_turn new_state
+    if (ai.weap = None && ai.hand = [] && ai.deck = [] &&
+      ai.minions = []) then raise GameOver
+    else (print_endline "AI is ending its turn";
+         Unix.sleep(3); end_turn st)
 end
 
