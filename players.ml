@@ -554,7 +554,7 @@ struct
                                 | _ -> failwith "Error" in
                         let new_m = {m with hp = m.hp + sp.mag} in
                         let new_c = {strongest_min with cat = Minion new_m} in
-                        print_endline ("AI healed its minion" ^ new_c.name);
+                        print_endline ("AI healed its minion " ^ new_c.name);
                         let new_mins = List.filter (fun card -> card <> strongest_min)
                                        ai.minions in
                         let new_ai = {ai with minions = new_c::new_mins} in
@@ -568,12 +568,12 @@ struct
                                | _ -> failwith "Error" in
                        let new_m = {m with hp = m.hp - sp.mag} in
                        let new_c = {c with cat = Minion new_m} in
-                       print_endline ("AI hurt its own minion" ^ new_c.name);
+                       print_endline ("AI hurt its own minion " ^ new_c.name);
                        let new_mins = List.filter (fun card -> card <> c)
                                       ai.minions in
                        let new_ai =
                          if new_m.hp<=0 then (print_endline
-                          ("AI has slain its minion" ^ new_c.name);
+                          ("AI has slain its minion " ^ new_c.name);
                           {ai with minions=new_mins})
                          else {ai with minions = new_c::new_mins} in
                        {st with players = (p,new_ai)}))
@@ -588,7 +588,7 @@ struct
                                   | _ -> failwith "Error" in
                           let new_m = {m with hp = m.hp + sp.mag} in
                           let new_c = {c with cat = Minion new_m} in
-                          print_endline ("AI healed your minion" ^ new_c.name);
+                          print_endline ("AI healed your minion " ^ new_c.name);
                           let new_mins = List.filter (fun card -> card <> c)
                                          p.minions in
                           let new_p = {p with minions = new_c::new_mins} in
@@ -616,12 +616,12 @@ struct
                                  | _ -> failwith "Error" in
                          let new_m = {m with hp = m.hp - sp.mag} in
                          let new_c = {c with cat = Minion new_m} in
-                         print_endline ("AI hurt your minion" ^ new_c.name);
+                         print_endline ("AI hurt your minion " ^ new_c.name);
                          let new_mins = List.filter (fun card -> card <> c)
                                         p.minions in
                          let new_p =
                            if new_m.hp<=0 then (print_endline
-                             ("AI has slain your minion" ^ new_c.name);
+                             ("AI has slain your minion " ^ new_c.name);
                              {p with minions = new_mins})
                            else
                            {p with minions = new_c::new_mins} in
