@@ -746,15 +746,15 @@ struct
       (List.filter
         (fun c -> (get_min_health c) <= a) ms) in
     let get_min_attack c =
-      match c.cat with Minion m -> m.hp | _ -> failwith "Error" in
+      match c.cat with Minion m -> m.attack | _ -> failwith "Error" in
     let max_att ms =
       List.fold_left
         (fun a c -> if (get_min_attack a) < (get_min_attack c) then c
                       else a) (List.hd ms) ms in
     let attack_a_minion () = (Random.int 3) < 2 in
-    let rec target ms =
+    let rec target ms face =
       let get_target a =
-        let rec attack_hero () =
+        let attack_hero () =
           let new_armor = (!opp).armor - a in
           print_endline "P1";
           Unix.sleep(2);
@@ -786,8 +786,7 @@ struct
                       else (print_endline ("Your "^(format_minion h)^" is now a "
                               ^(format_minion new_min)); new_min::t))
                     else(h::(attack_minion m t))) in
-        if (((!opp).hp + (!opp).armor) <= a) then
-          (attack_hero ())
+        if face then (attack_hero ())
         else (
           match (get_killable (!theirs) a) with
           | [] -> if (attack_a_minion ()) && (!theirs <> []) then
@@ -822,11 +821,16 @@ struct
                 Unix.sleep(2);
                 print_string "Target: ";
                 match h.cat with
-                | Minion c -> get_target c.attack; target t;
+                | Minion c -> get_target c.attack; target t face;
                 |  _ -> failwith "Error"; );
       opp := {!opp with minions = !theirs} in
+    let go_face ms =
+      let attack_total = (List.fold_left (fun a m -> a + get_min_attack m)
+                            !hero_attack ms) in
+      let health_total = !opp.armor + !opp.hp in
+      attack_total >= health_total in
     let end_state s =
-      target (!player).minions;
+      target (!player).minions (go_face (!player).minions);
       {s with players = (!opp, !player)} in
     let start_attack s =
       let a = string_of_int (!hero_attack) in
