@@ -1,0 +1,1054 @@
+commit 3af20c7d71dba33fb3489eb7867464ccbcbbb389
+Author: Ritwik Dan <rd389@cornell.edu>
+Date:   Sun Dec 4 20:25:44 2016 -0500
+
+    Delete interfaces.zip
+
+ interfaces.zip | Bin 1618 -> 0 bytes
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+
+commit e9a61c993b296a2178d176787aabb766924ca4ea
+Merge: f5ac2af c53a2be
+Author: Ubuntu <ubuntu@csvm>
+Date:   Sun Dec 4 19:50:12 2016 -0500
+
+    Merge branch 'master' of https://github.coecis.cornell.edu/rd389/Heroes-of-OCamlot
+
+commit f5ac2afe251d0d3467f4f4407d1089087a7b406d
+Author: Ubuntu <ubuntu@csvm>
+Date:   Sun Dec 4 19:49:37 2016 -0500
+
+    fixed spell playing stuff in AIPlayer
+
+ players.ml | 33 +++++++++++++++++++++++++++++++--
+ 1 file changed, 31 insertions(+), 2 deletions(-)
+
+commit c53a2be853b5c362fd630bb3f3c896eb07b1d457
+Author: Ubuntu <ubuntu@csvm>
+Date:   Sun Dec 4 19:20:40 2016 -0500
+
+    Finished README and made AI attack_phase a little smarter
+
+ README.txt | 63 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++--
+ players.ml | 18 +++++++++++-------
+ 2 files changed, 72 insertions(+), 9 deletions(-)
+
+commit 9edb2f947bf34f6b7f9cd48449366f8fd753493e
+Merge: 8b3af1e e85fe65
+Author: Ubuntu <ubuntu@csvm>
+Date:   Wed Nov 30 18:40:27 2016 -0500
+
+    Merge branch 'master' of https://github.coecis.cornell.edu/rd389/Heroes-of-OCamlot
+
+commit 8b3af1ee9bfd2f410c936ecdbcf675a18459636d
+Author: Ubuntu <ubuntu@csvm>
+Date:   Wed Nov 30 18:40:18 2016 -0500
+
+    Final touches, started README
+
+ Makefile   |  4 ++--
+ README.txt | 26 ++++++++++++++++++++++++++
+ basic.json | 36 +++++++++++++++++++++---------------
+ game.ml    |  6 +++---
+ players.ml |  7 ++++---
+ state.ml   |  6 +++---
+ 6 files changed, 59 insertions(+), 26 deletions(-)
+
+commit e85fe65e9b253b2c2b1464746b58414674e6a5c1
+Author: Ubuntu <ubuntu@csvm>
+Date:   Wed Nov 30 18:36:44 2016 -0500
+
+    fixed players.mli after scrapping post phase
+
+ players.mli | 16 ++++++++++------
+ 1 file changed, 10 insertions(+), 6 deletions(-)
+
+commit 1fb7cfff5112f427752e8060733f06fb9b873082
+Author: Ubuntu <ubuntu@csvm>
+Date:   Wed Nov 30 18:00:00 2016 -0500
+
+    fixed small stuff in players.ml
+
+ players.ml | 11 +++++------
+ 1 file changed, 5 insertions(+), 6 deletions(-)
+
+commit d1b1696c95e8e86cf9f8f7fe9131cf3662ee3e51
+Author: Ubuntu <ubuntu@csvm>
+Date:   Wed Nov 30 16:42:58 2016 -0500
+
+    added 2.5 sec wait before printing winner of game and ending game, in end_game helper function within Game.play
+
+ game.ml | 1 +
+ 1 file changed, 1 insertion(+)
+
+commit 2d861bfa1cbe7e3ef495357f5fcf29c167ed50e5
+Author: Ubuntu <ubuntu@csvm>
+Date:   Wed Nov 30 15:35:56 2016 -0500
+
+    fixed some prompt stuffs
+
+ players.ml | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+commit 7702bd9ffa9a7cd4848e04ad2e063613d9da662a
+Author: Ubuntu <ubuntu@csvm>
+Date:   Wed Nov 30 15:26:51 2016 -0500
+
+    Fixed play_spell problems and prompt stuff when it comes to ending game and who wins
+
+ game.ml     |  6 +++++-
+ players.ml  | 48 +++++++++++++++++++++++++++++++++++-------------
+ players.mli |  1 +
+ 3 files changed, 41 insertions(+), 14 deletions(-)
+
+commit c6701a5b57a1910f42325b82eddb307e022d43d7
+Author: Ubuntu <ubuntu@csvm>
+Date:   Wed Nov 30 04:39:10 2016 -0500
+
+    fixed AI attack bug
+
+ game.ml    | 2 +-
+ players.ml | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+commit 231673726806098588197a8120ffd1e7a1c928f4
+Merge: 4a53100 ac6e340
+Author: = <=>
+Date:   Wed Nov 30 02:54:57 2016 -0500
+
+    directory changes
+
+commit 4a53100b1162839a000cb866aa7716e46d10a629
+Author: = <=>
+Date:   Wed Nov 30 02:48:44 2016 -0500
+
+    deck fixes, play test fixes
+
+ cs_deck.json | 281 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ players.ml   |  10 ++-
+ state.ml     |   3 +-
+ 3 files changed, 291 insertions(+), 3 deletions(-)
+
+commit ac6e34020a3cfd9526258afe7490b7c9432e8e2b
+Author: Ubuntu <ubuntu@csvm>
+Date:   Wed Nov 30 02:23:42 2016 -0500
+
+    deck shuffling is randomized now
+
+ game.ml | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+commit 898a9f571510307c0677a398738a8f534a04256a
+Author: Ubuntu <ubuntu@csvm>
+Date:   Wed Nov 30 02:02:23 2016 -0500
+
+    merged and rearranged input files
+
+ cs_deck.json        | 281 ++++++++++++++++++++++++++++++++++++++++++++++++++++
+ input/cs_deck.json  | 281 ----------------------------------------------------
+ input/template.json |  58 -----------
+ players.ml          |   2 +-
+ template.json       |  58 +++++++++++
+ 5 files changed, 340 insertions(+), 340 deletions(-)
+
+commit fd6213f5593a605ccf2886f3ac173e28d4edc932
+Merge: 13949cd c08c138
+Author: Ubuntu <ubuntu@csvm>
+Date:   Wed Nov 30 01:59:00 2016 -0500
+
+    Merge branch 'master' of https://github.coecis.cornell.edu/rd389/Heroes-of-OCamlot
+
+commit 13949cdd781f6875115059287d09bf68d0af7011
+Author: Ubuntu <ubuntu@csvm>
+Date:   Wed Nov 30 01:58:51 2016 -0500
+
+    player work
+
+ players.ml | 75 ++++++++++++++++++++++++++++++++------------------------------
+ 1 file changed, 39 insertions(+), 36 deletions(-)
+
+commit c08c1384473d7ae26f1c2821b948debd3eb85d20
+Merge: bb85226 ef3201d
+Author: = <=>
+Date:   Wed Nov 30 01:50:15 2016 -0500
+
+    Merge branch 'master' of https://github.coecis.cornell.edu/rd389/Heroes-of-OCamlot
+
+commit bb852268f2a07b7f6972e223cdb09d686f335cab
+Author: = <=>
+Date:   Wed Nov 30 01:39:30 2016 -0500
+
+    cs deck
+
+ input/cs_deck.json | 281 +++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 281 insertions(+)
+
+commit ef3201dc933e725823dc586b8d5ecbbdd9ff009e
+Merge: 27e2acb c1044f8
+Author: Ubuntu <ubuntu@csvm>
+Date:   Wed Nov 30 01:31:53 2016 -0500
+
+    fixed merge conflict
+
+commit 27e2acbc20643d3fdca3dadc042221e22f0c7197
+Author: Ubuntu <ubuntu@csvm>
+Date:   Wed Nov 30 01:25:09 2016 -0500
+
+    commented all helper functions, fixed AI post phase
+
+ game.ml    | 38 ++++++++++++++++++++++++++++++++++++--
+ players.ml | 42 ++++++++++++++++++++++++++++++++----------
+ state.ml   | 62 ++++++++++++++++++++++++++++++++++----------------------------
+ state.mli  |  3 +++
+ 4 files changed, 105 insertions(+), 40 deletions(-)
+
+commit c1044f8efb5da9b9195d33c031b07c1c3c578bbf
+Author: Ubuntu <ubuntu@csvm>
+Date:   Wed Nov 30 01:18:15 2016 -0500
+
+    changed state print order for minion descs
+
+ state.ml | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+commit 8c5d21150f493f09ef1eed4902c389481f07ead1
+Author: Ubuntu <ubuntu@csvm>
+Date:   Wed Nov 30 01:10:57 2016 -0500
+
+    attttackkkk
+
+ players.ml | 58 +++++++++++++++++++++++++++++++---------------------------
+ 1 file changed, 31 insertions(+), 27 deletions(-)
+
+commit d2c7c703d8d9fb5165b5c8c8acd12ccacbcb1797
+Merge: 5b80fd7 1fd2f0b
+Author: Ubuntu <ubuntu@csvm>
+Date:   Wed Nov 30 00:01:34 2016 -0500
+
+    Merge branch 'master' of https://github.coecis.cornell.edu/rd389/Heroes-of-OCamlot
+
+commit 5b80fd7f5ea50bb428bd6671c8a29c0d811527f5
+Author: Ubuntu <ubuntu@csvm>
+Date:   Wed Nov 30 00:01:24 2016 -0500
+
+    fixed attack_phase so hero doesn't hit both armor and health
+
+ players.ml | 60 +++++++++++++++++++++++++++++-------------------------------
+ 1 file changed, 29 insertions(+), 31 deletions(-)
+
+commit 1fd2f0b1e7a3d86e2dd40f9dbdea2c864c790ef1
+Author: Ubuntu <ubuntu@csvm>
+Date:   Tue Nov 29 19:38:24 2016 -0500
+
+    made some small changes to print_state in state.ml and prompt stuff in players.ml
+
+ players.ml | 9 +++++++--
+ state.ml   | 2 --
+ 2 files changed, 7 insertions(+), 4 deletions(-)
+
+commit 6e6b552faffc87e5418be715972e1e41f93221fb
+Merge: 7a0a971 abc725d
+Author: Ubuntu <ubuntu@csvm>
+Date:   Tue Nov 29 19:13:48 2016 -0500
+
+    aiplayer done, haven't debugged
+
+commit 7a0a9714b377bb0e3db06c9bfd11ff93898a02fc
+Author: Ubuntu <ubuntu@csvm>
+Date:   Tue Nov 29 19:12:19 2016 -0500
+
+    finished aiplayer minus attack_phase, haven't debugged yet
+
+ players.ml | 270 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 262 insertions(+), 8 deletions(-)
+
+commit abc725d2eee9ec0253d450f0ea6bf0523538c98f
+Author: Ubuntu <ubuntu@csvm>
+Date:   Tue Nov 29 16:16:52 2016 -0500
+
+    added pausing to AI attack_phase
+
+ players.ml | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+commit 996b66de3f6890df989857d2db4759f05100b698
+Author: Ubuntu <ubuntu@csvm>
+Date:   Tue Nov 29 15:43:54 2016 -0500
+
+    AI attack_phase
+
+ players.ml | 120 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 119 insertions(+), 1 deletion(-)
+
+commit f8180916aa5de86cbc7e757a318a2f944910bcef
+Author: Ubuntu <ubuntu@csvm>
+Date:   Tue Nov 29 03:08:26 2016 -0500
+
+    fixed stuff in players.ml
+
+ players.ml | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+commit 18f5c0db5d910e42d31b9eb43046be4a2ab7a135
+Merge: 269d5c5 61f85a2
+Author: Ubuntu <ubuntu@csvm>
+Date:   Tue Nov 29 03:04:28 2016 -0500
+
+    Merge branch 'master' of https://github.coecis.cornell.edu/rd389/Heroes-of-OCamlot
+
+commit 269d5c587113ea6008be1f293481b9b9522e9713
+Author: Ubuntu <ubuntu@csvm>
+Date:   Tue Nov 29 03:04:19 2016 -0500
+
+    fixed choose_card problem and changed some print_state stuff in state.ml
+
+ players.ml | 55 +++++++++++++++++++++++++++++++++----------------------
+ state.ml   | 42 ++++++++++++++++++++++++++++++++++--------
+ 2 files changed, 67 insertions(+), 30 deletions(-)
+
+commit 61f85a2024493ea3a2200e99a1cb86b17321241a
+Author: Ubuntu <ubuntu@csvm>
+Date:   Tue Nov 29 02:46:45 2016 -0500
+
+    playability
+
+ players.ml | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+commit 9a93f43adf8273b84c2bfa0cb30cde057576d154
+Merge: 01e293d 3085c8c
+Author: Ubuntu <ubuntu@csvm>
+Date:   Tue Nov 29 02:34:05 2016 -0500
+
+    merged
+
+commit 01e293d0cb368266b2164f2851e26e3aa0cf58b6
+Author: Ubuntu <ubuntu@csvm>
+Date:   Tue Nov 29 02:32:02 2016 -0500
+
+    Adjusted attack_phase.
+
+ players.ml | 72 ++++++++++++++++++++++++++++++++++++++------------------------
+ 1 file changed, 44 insertions(+), 28 deletions(-)
+
+commit 3085c8c2e59517083d083669ded43cb976a2ce03
+Merge: 70a0a23 ce615d4
+Author: Ubuntu <ubuntu@csvm>
+Date:   Tue Nov 29 02:13:09 2016 -0500
+
+    fixed merge conflict
+
+commit 70a0a239c78809cfe8c115d07f6d6a3078ef9739
+Author: Ubuntu <ubuntu@csvm>
+Date:   Tue Nov 29 02:09:14 2016 -0500
+
+    fixed stuff in players and state.ml
+
+ players.ml | 48 ++++++++++++++++++++++++++++++++++++++++--------
+ state.ml   | 14 ++++++++++----
+ 2 files changed, 50 insertions(+), 12 deletions(-)
+
+commit ce615d4ef247de46a1ae29e7597f067f90280d58
+Author: Ubuntu <ubuntu@csvm>
+Date:   Tue Nov 29 01:22:26 2016 -0500
+
+    consistency with prompts
+
+ players.ml | 46 ++++++++++++++++++++++------------------------
+ 1 file changed, 22 insertions(+), 24 deletions(-)
+
+commit ec7f01a1c28d14fda7d14300117eb3fb999c097b
+Merge: 9edb7d4 7bbde44
+Author: Ubuntu <ubuntu@csvm>
+Date:   Tue Nov 29 01:04:21 2016 -0500
+
+    Merge branch 'master' of https://github.coecis.cornell.edu/rd389/Heroes-of-OCamlot
+
+commit 9edb7d4d47c1410cc5620037e8b9647595406239
+Author: Ubuntu <ubuntu@csvm>
+Date:   Tue Nov 29 01:03:32 2016 -0500
+
+    small changes
+
+ players.ml | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+commit 7bbde44ae218e80bbfc903759edd62db1b8c87c7
+Author: Ubuntu <ubuntu@csvm>
+Date:   Tue Nov 29 00:54:44 2016 -0500
+
+    fixed some prompt stuff
+
+ state.ml | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit 41a45658ae50a9140acbaa8c9b7dfb329b68c470
+Merge: 7b1a946 daf09ed
+Author: Ubuntu <ubuntu@csvm>
+Date:   Tue Nov 29 00:51:24 2016 -0500
+
+    Merge branch 'master' of https://github.coecis.cornell.edu/rd389/Heroes-of-OCamlot
+
+commit 7b1a946769dbf6f91526b8f835af305c405dd9f6
+Author: Ubuntu <ubuntu@csvm>
+Date:   Tue Nov 29 00:51:11 2016 -0500
+
+    fix in game.ml
+
+ game.ml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit daf09edf7a8c0590cbea840abbd5148b94f67e6c
+Author: Ubuntu <ubuntu@csvm>
+Date:   Tue Nov 29 00:50:32 2016 -0500
+
+    changes to data structures
+
+ state.ml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 0a582ddf95e2f42530136891e53e18f1b3fe4eba
+Merge: c9fb806 5099e6d
+Author: Ubuntu <ubuntu@csvm>
+Date:   Tue Nov 29 00:49:26 2016 -0500
+
+    Merge branch 'master' of https://github.coecis.cornell.edu/rd389/Heroes-of-OCamlot
+
+commit c9fb806648002734372f4cedbae53e9175d65988
+Author: Ubuntu <ubuntu@csvm>
+Date:   Tue Nov 29 00:48:20 2016 -0500
+
+    fixed print_state for minion printing
+
+ state.ml | 30 ++++++++++++++++++++++++------
+ 1 file changed, 24 insertions(+), 6 deletions(-)
+
+commit 5099e6de4f878aefadde0b301ed69cda2a08b2fd
+Author: Ubuntu <ubuntu@csvm>
+Date:   Tue Nov 29 00:46:43 2016 -0500
+
+    HealM
+
+ state.ml  | 2 +-
+ state.mli | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+commit 3e62e882e85e95fe7c249b11c0a915214b5022c3
+Author: Ubuntu <ubuntu@csvm>
+Date:   Tue Nov 29 00:34:19 2016 -0500
+
+    attack_phase
+
+ players.ml | 93 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 92 insertions(+), 1 deletion(-)
+
+commit f63b01a944f9adf01895366e59053ba6362e3062
+Author: Ubuntu <ubuntu@csvm>
+Date:   Tue Nov 29 00:30:39 2016 -0500
+
+    finished pre and post phase (as of now), fixed print_state, fixed gameplay interactivity in game.ml
+
+ game.ml    | 41 ++++++++++++++++++++++++++++-------------
+ players.ml |  2 +-
+ state.ml   | 39 +++++++++++++++++++++------------------
+ 3 files changed, 50 insertions(+), 32 deletions(-)
+
+commit 5ba21c6a9aa2a64adc175d59f7cf740c2e8b0fc3
+Author: Ubuntu <ubuntu@csvm>
+Date:   Mon Nov 28 22:39:16 2016 -0500
+
+    changed some prompt stuff in game.play
+
+ game.ml | 34 ++++++++++++++++++++++++++++++----
+ 1 file changed, 30 insertions(+), 4 deletions(-)
+
+commit e2d2ec54f450d220791237656c8b0f69a9bb3e94
+Author: Ubuntu <ubuntu@csvm>
+Date:   Mon Nov 28 22:20:09 2016 -0500
+
+    small change in user prompt for HumanPlayer pre and post phases
+
+ players.ml | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit ea1bd7e925737d13c5bdc9677b67d15cdbe250e3
+Author: Ubuntu <ubuntu@csvm>
+Date:   Mon Nov 28 19:41:28 2016 -0500
+
+    gotta cite shuffle
+
+ game.ml | 2 ++
+ 1 file changed, 2 insertions(+)
+
+commit 37777043a7faa8b861809c2f564628397a014be2
+Author: Ubuntu <ubuntu@csvm>
+Date:   Mon Nov 28 19:29:31 2016 -0500
+
+    added full card-playing functionality to pre- and post-phases in HumanPlayer, including effects of playing spells
+
+ players.ml | 181 ++++++++++++++++++++++++++++++++++++++++++++++++++-----------
+ 1 file changed, 150 insertions(+), 31 deletions(-)
+
+commit e00c315c8bfc09112ac01265e22f26380d660074
+Author: Ubuntu <ubuntu@csvm>
+Date:   Mon Nov 28 02:53:52 2016 -0500
+
+    got rid of Buff effect for spells
+
+ game.ml   | 2 +-
+ state.ml  | 2 +-
+ state.mli | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
+
+commit f78c1e7a2035d6001ae5fa19d349546b43ddcb7a
+Author: Ubuntu <ubuntu@csvm>
+Date:   Mon Nov 28 01:59:15 2016 -0500
+
+    made a basic 3-card deck and fixed one small thing in game.ml
+
+ basic.json | 28 ++++++++++++++++++++++++++++
+ game.ml    |  2 +-
+ 2 files changed, 29 insertions(+), 1 deletion(-)
+
+commit 5a00afee2601589e5b037d213ea6119bf41613dd
+Author: Ubuntu <ubuntu@csvm>
+Date:   Mon Nov 28 01:30:06 2016 -0500
+
+    fixed some stuff in HumanPlayer
+
+ players.ml | 25 +++++++++++++++++++------
+ 1 file changed, 19 insertions(+), 6 deletions(-)
+
+commit 9f03c4ad4da161b989ae4ed08d869d3f0c875e56
+Author: Ubuntu <ubuntu@csvm>
+Date:   Mon Nov 28 01:08:01 2016 -0500
+
+    change to state.ml
+
+ state.ml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 4ea4bb65259d1f9d833d5f45402bc1a87f81960d
+Merge: b6eda6f 1398632
+Author: Ubuntu <ubuntu@csvm>
+Date:   Mon Nov 28 01:03:33 2016 -0500
+
+    Merge branch 'master' of https://github.coecis.cornell.edu/rd389/Heroes-of-OCamlot
+
+commit b6eda6f88a4a310b44933d6e5a4867b04571a420
+Author: Ubuntu <ubuntu@csvm>
+Date:   Mon Nov 28 01:02:54 2016 -0500
+
+    finished HumanPlayer: pre and post phases
+
+ players.ml | 46 +++++++++++++++++++++++++++++++++-------------
+ 1 file changed, 33 insertions(+), 13 deletions(-)
+
+commit 1398632491beeb3c5f298679f56e800012bfd869
+Author: Ubuntu <ubuntu@csvm>
+Date:   Mon Nov 28 00:29:05 2016 -0500
+
+    added cost to print_card function
+
+ state.ml | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+commit 92a58ebc2fe6aa9230c1ec376f6f1e255ae759f2
+Merge: e4080d2 c76f366
+Author: = <=>
+Date:   Mon Nov 28 00:12:53 2016 -0500
+
+    Merge branch 'master' of https://github.coecis.cornell.edu/rd389/Heroes-of-OCamlot
+
+commit e4080d2ac37df4d9579cccd98fa7c11d185c3e2e
+Author: = <=>
+Date:   Mon Nov 28 00:10:30 2016 -0500
+
+    fixed unused vars
+
+ state.ml | 28 ++++++++++++----------------
+ 1 file changed, 12 insertions(+), 16 deletions(-)
+
+commit c76f36649b14f01f468732751d4e0f0417e7e202
+Merge: b58fdd6 3531487
+Author: Ubuntu <ubuntu@csvm>
+Date:   Mon Nov 28 00:06:11 2016 -0500
+
+    attempted fix to merge conflict
+
+commit b58fdd64f282c7c2cc6b27b8fa7ea112345d03a6
+Author: Ubuntu <ubuntu@csvm>
+Date:   Mon Nov 28 00:03:14 2016 -0500
+
+    finished HumanPlayer.post_phase
+
+ players.ml | 39 +++++++++++++++++++++++++++++++++------
+ 1 file changed, 33 insertions(+), 6 deletions(-)
+
+commit 3531487b019042fce7ce5f4869f906e694eb747f
+Merge: 5d014c6 bb45eab
+Author: = <=>
+Date:   Sun Nov 27 23:55:27 2016 -0500
+
+    Merge branch 'master' of https://github.coecis.cornell.edu/rd389/Heroes-of-OCamlot
+
+commit a6393cb91e0abcbc88a9ae149be515f1d89c40f0
+Merge: 2db12bf bb45eab
+Author: Ubuntu <ubuntu@csvm>
+Date:   Sun Nov 27 23:55:11 2016 -0500
+
+    Merge branch 'master' of https://github.coecis.cornell.edu/rd389/Heroes-of-OCamlot
+
+commit 5d014c6806520b67a65b9b87e2d09887bf60e85c
+Merge: 75d2a66 911d466
+Author: = <=>
+Date:   Sun Nov 27 23:54:57 2016 -0500
+
+    removed _build
+
+commit bb45eab25a4d1eded6b6d2e19c1ee5a3d2d95bd3
+Author: Ubuntu <ubuntu@csvm>
+Date:   Sun Nov 27 23:53:02 2016 -0500
+
+    removed _build
+
+ _build/_digests            |  22 ------------
+ _build/_log                |  32 -----------------
+ _build/game.cmi            | Bin 526 -> 0 bytes
+ _build/game.cmo            | Bin 19857 -> 0 bytes
+ _build/game.ml             |  86 ---------------------------------------------
+ _build/game.ml.depends     |   1 -
+ _build/game.mli            |  10 ------
+ _build/game.mli.depends    |   1 -
+ _build/main.byte           | Bin 3390408 -> 0 bytes
+ _build/main.cmi            | Bin 349 -> 0 bytes
+ _build/main.cmo            | Bin 3470 -> 0 bytes
+ _build/main.ml             |  19 ----------
+ _build/main.ml.depends     |   1 -
+ _build/ocamlc.where        |   1 -
+ _build/players.cmi         | Bin 851 -> 0 bytes
+ _build/players.cmo         | Bin 6293 -> 0 bytes
+ _build/players.ml          |  49 --------------------------
+ _build/players.ml.depends  |   1 -
+ _build/players.mli         |  28 ---------------
+ _build/players.mli.depends |   1 -
+ _build/state.cmi           | Bin 1727 -> 0 bytes
+ _build/state.cmo           | Bin 3840 -> 0 bytes
+ _build/state.ml            |  47 -------------------------
+ _build/state.ml.depends    |   1 -
+ _build/state.mli           |  50 --------------------------
+ _build/state.mli.depends   |   1 -
+ game.ml                    |   6 ++--
+ main.byte                  |   1 -
+ 28 files changed, 4 insertions(+), 354 deletions(-)
+
+commit 75d2a665cf56a4094dddb62fb503c79aa1369c4c
+Author: = <=>
+Date:   Sun Nov 27 23:45:22 2016 -0500
+
+    draw_card and start_turn
+
+ _build/_digests            |  22 ++++++++++
+ _build/_log                |  41 +++++++++++++++++++
+ _build/game.cmi            | Bin 0 -> 526 bytes
+ _build/game.cmo            | Bin 0 -> 14534 bytes
+ _build/game.ml             |  88 ++++++++++++++++++++++++++++++++++++++++
+ _build/game.ml.depends     |   1 +
+ _build/game.mli            |  10 +++++
+ _build/game.mli.depends    |   1 +
+ _build/main.byte           | Bin 0 -> 3394262 bytes
+ _build/main.cmi            | Bin 0 -> 349 bytes
+ _build/main.cmo            | Bin 0 -> 3479 bytes
+ _build/main.ml             |  19 +++++++++
+ _build/main.ml.depends     |   1 +
+ _build/ocamlc.where        |   1 +
+ _build/players.cmi         | Bin 0 -> 826 bytes
+ _build/players.cmo         | Bin 0 -> 8551 bytes
+ _build/players.ml          |  64 +++++++++++++++++++++++++++++
+ _build/players.ml.depends  |   1 +
+ _build/players.mli         |  27 +++++++++++++
+ _build/players.mli.depends |   1 +
+ _build/state.cmi           | Bin 0 -> 2009 bytes
+ _build/state.cmo           | Bin 0 -> 11074 bytes
+ _build/state.ml            |  99 +++++++++++++++++++++++++++++++++++++++++++++
+ _build/state.ml.depends    |   1 +
+ _build/state.mli           |  56 +++++++++++++++++++++++++
+ _build/state.mli.depends   |   1 +
+ main.byte                  |   1 +
+ players.ml                 |  24 +++++++++--
+ players.mli                |   2 +-
+ state.ml                   |  66 ++++++++++++++++++++++++++----
+ state.mli                  |  20 +++++----
+ 31 files changed, 526 insertions(+), 21 deletions(-)
+
+commit 911d466701729640331c94ec51eb3814dd7ebae8
+Author: Ubuntu <ubuntu@csvm>
+Date:   Sun Nov 27 23:03:25 2016 -0500
+
+    finished game.play (i think)
+
+ _build/_digests         |  22 ++++++---
+ _build/_log             |  34 +++++++------
+ _build/game.cmi         | Bin 526 -> 526 bytes
+ _build/game.cmo         | Bin 0 -> 19857 bytes
+ _build/game.ml          | 127 +++++++++++++++++++-----------------------------
+ _build/main.byte        | Bin 0 -> 3390408 bytes
+ _build/main.cmi         | Bin 349 -> 349 bytes
+ _build/main.cmo         | Bin 3470 -> 3470 bytes
+ _build/players.cmi      | Bin 851 -> 851 bytes
+ _build/players.cmo      | Bin 0 -> 6293 bytes
+ _build/state.cmi        | Bin 1785 -> 1727 bytes
+ _build/state.cmo        | Bin 0 -> 3840 bytes
+ _build/state.ml         |  47 ++++++++++++++++++
+ _build/state.ml.depends |   1 +
+ _build/state.mli        |  14 +++---
+ game.ml                 | 123 ++++++++++++++++++----------------------------
+ 16 files changed, 183 insertions(+), 185 deletions(-)
+
+commit 2db12bfb25022e79f85fe043169ccdbcee62d7da
+Merge: 59b31b9 b8479dc
+Author: Ubuntu <ubuntu@csvm>
+Date:   Sun Nov 27 22:44:17 2016 -0500
+
+    Merge branch 'master' of https://github.coecis.cornell.edu/rd389/Heroes-of-OCamlot
+
+commit 59b31b9b336953b45827cd0fb2b51498c6518392
+Author: Ubuntu <ubuntu@csvm>
+Date:   Sun Nov 27 22:43:31 2016 -0500
+
+    working on HumanPlayer.post_phase
+
+ players.ml | 16 ++++++++++++++--
+ 1 file changed, 14 insertions(+), 2 deletions(-)
+
+commit b8479dc8389f5783b9ad3e6689e9cb58b458e2e1
+Author: Ubuntu <ubuntu@csvm>
+Date:   Sun Nov 27 22:41:58 2016 -0500
+
+    changed state.ml and game.play
+
+ game.ml   | 10 +++++-----
+ state.ml  | 17 +++++++----------
+ state.mli | 14 ++++++--------
+ 3 files changed, 18 insertions(+), 23 deletions(-)
+
+commit 4c56f01b11064527442cca33938ec5ceb637557c
+Author: Ubuntu <ubuntu@csvm>
+Date:   Sun Nov 27 22:19:54 2016 -0500
+
+    whoops
+
+ _build/_digests         |  22 ++++++++--------------
+ _build/_log             |  18 +++++++-----------
+ _build/game.cmi         | Bin 526 -> 526 bytes
+ _build/game.cmo         | Bin 19427 -> 0 bytes
+ _build/game.ml          |   2 +-
+ _build/main.byte        | Bin 3390082 -> 0 bytes
+ _build/main.cmi         | Bin 349 -> 349 bytes
+ _build/main.cmo         | Bin 3470 -> 3470 bytes
+ _build/players.cmi      | Bin 851 -> 851 bytes
+ _build/players.cmo      | Bin 6293 -> 0 bytes
+ _build/state.cmi        | Bin 1767 -> 1785 bytes
+ _build/state.cmo        | Bin 3931 -> 0 bytes
+ _build/state.ml         |  49 ------------------------------------------------
+ _build/state.ml.depends |   1 -
+ _build/state.mli        |   6 +++---
+ 15 files changed, 19 insertions(+), 79 deletions(-)
+
+commit 1699c552bf016fda5282751ca4e33362c0294cdc
+Author: Ubuntu <ubuntu@csvm>
+Date:   Sun Nov 27 22:13:42 2016 -0500
+
+    added to game.play and changed state
+
+ _build/_digests            |  22 +++++++++
+ _build/_log                |  32 +++++++++++++
+ _build/game.cmi            | Bin 0 -> 526 bytes
+ _build/game.cmo            | Bin 0 -> 19427 bytes
+ _build/game.ml             | 115 +++++++++++++++++++++++++++++++++++++++++++++
+ _build/game.ml.depends     |   1 +
+ _build/game.mli            |  10 ++++
+ _build/game.mli.depends    |   1 +
+ _build/main.byte           | Bin 0 -> 3390082 bytes
+ _build/main.cmi            | Bin 0 -> 349 bytes
+ _build/main.cmo            | Bin 0 -> 3470 bytes
+ _build/main.ml             |  19 ++++++++
+ _build/main.ml.depends     |   1 +
+ _build/ocamlc.where        |   1 +
+ _build/players.cmi         | Bin 0 -> 851 bytes
+ _build/players.cmo         | Bin 0 -> 6293 bytes
+ _build/players.ml          |  49 +++++++++++++++++++
+ _build/players.ml.depends  |   1 +
+ _build/players.mli         |  28 +++++++++++
+ _build/players.mli.depends |   1 +
+ _build/state.cmi           | Bin 0 -> 1767 bytes
+ _build/state.cmo           | Bin 0 -> 3931 bytes
+ _build/state.ml            |  49 +++++++++++++++++++
+ _build/state.ml.depends    |   1 +
+ _build/state.mli           |  52 ++++++++++++++++++++
+ _build/state.mli.depends   |   1 +
+ game.ml                    |  18 +++----
+ main.byte                  |   1 +
+ state.ml                   |   1 +
+ 29 files changed, 395 insertions(+), 9 deletions(-)
+
+commit d2c5bb12a6b72f5781f31931bd5a5a27b0c17f50
+Author: Ubuntu <ubuntu@csvm>
+Date:   Sun Nov 27 21:41:04 2016 -0500
+
+    started game.play and removed mutability from state
+
+ game.ml     | 31 +++++++++++++++++++++++++++++--
+ players.ml  |  1 +
+ players.mli |  1 +
+ state.ml    | 16 ++++++++--------
+ state.mli   | 16 ++++++++--------
+ 5 files changed, 47 insertions(+), 18 deletions(-)
+
+commit cd49d27f5059fc007e9961044216974016c80b57
+Merge: 7836153 b2eba63
+Author: = <=>
+Date:   Sun Nov 27 19:54:58 2016 -0500
+
+    fixed merge
+
+commit 7836153ee6fc621b5618d3140233d85d3f8aa251
+Author: = <=>
+Date:   Sun Nov 27 19:52:58 2016 -0500
+
+    just let me pull already
+
+ .ocamlinit | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
+
+commit b2eba63032daf8c0e8e6c543a762edc37dcf92b5
+Author: Ubuntu <ubuntu@csvm>
+Date:   Sun Nov 27 19:44:46 2016 -0500
+
+    changed ref fields to mutable in records
+
+ game.ml   |  6 +++---
+ state.ml  | 16 ++++++++--------
+ state.mli | 16 ++++++++--------
+ 3 files changed, 19 insertions(+), 19 deletions(-)
+
+commit 5421d88dc7aceb59e32ffd0fe65882578113d429
+Author: Ubuntu <ubuntu@csvm>
+Date:   Sun Nov 27 19:31:52 2016 -0500
+
+    added 'cards in play' field to hero record type
+
+ state.ml  | 1 +
+ state.mli | 1 +
+ 2 files changed, 2 insertions(+)
+
+commit 46f28e7d230ee91df2838bc4991cc41aeffb7289
+Author: Ubuntu <ubuntu@csvm>
+Date:   Sat Nov 26 23:22:52 2016 -0500
+
+    fixed Makefile
+
+ Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit ca5493867497bf42ed1898852a6060ea4c9acf65
+Author: Ubuntu <ubuntu@csvm>
+Date:   Sat Nov 26 23:17:13 2016 -0500
+
+    finished deck_builder, added description field to card record type
+
+ game.ml   | 47 +++++++++++++++++++++++++++++++++++++++++++----
+ state.ml  |  8 +-------
+ state.mli |  8 +-------
+ 3 files changed, 45 insertions(+), 18 deletions(-)
+
+commit 24da677ce0f25f3c517b8aea307c8c5d5d70fecc
+Author: Ubuntu <ubuntu@csvm>
+Date:   Sat Nov 26 22:16:20 2016 -0500
+
+    added yojson pkg to makefile, working on deck_builder, added name and description fields in card types in state.ml and .mli
+
+ Makefile  |  2 +-
+ game.ml   | 42 +++++++++++++++++++++++++++++++++++++++++-
+ state.ml  |  6 ++++++
+ state.mli |  6 ++++++
+ 4 files changed, 54 insertions(+), 2 deletions(-)
+
+commit df79fbcce8ca70ea04d17b255eea25808f1bbeb4
+Author: Ubuntu <ubuntu@csvm>
+Date:   Sat Nov 26 19:27:13 2016 -0500
+
+    made template for .json decks
+
+ input/template.json | 58 +++++++++++++++++++++++++++++++++++++++++++++++++++++
+ main.ml             |  2 +-
+ 2 files changed, 59 insertions(+), 1 deletion(-)
+
+commit d76ef8d6bc4bbedc6e888e1e12069c0e1ed126c6
+Author: Ubuntu <ubuntu@csvm>
+Date:   Tue Nov 22 03:28:33 2016 -0500
+
+    fixed .ocamlinit
+
+ .ocamlinit | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
+
+commit 06fdcd24246380ee87d2a62d808febdc6894f976
+Author: Ubuntu <ubuntu@csvm>
+Date:   Tue Nov 22 03:11:27 2016 -0500
+
+    delete main.mli
+
+ main.mli | 3 ---
+ 1 file changed, 3 deletions(-)
+
+commit fede14a143f70476e4cbe14650b25cd0c18f1641
+Merge: a1a1985 243bb1d
+Author: Ubuntu <ubuntu@csvm>
+Date:   Tue Nov 22 03:09:27 2016 -0500
+
+    merge
+
+commit 243bb1da7d539c9e33e312489869145747bf4106
+Author: = <=>
+Date:   Tue Nov 22 03:07:12 2016 -0500
+
+    Makefile
+
+ Makefile | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+commit ee80ab4ac9805be51e2e8992eba107ce5d90cf0b
+Author: Ritwik Dan <rd389@cornell.edu>
+Date:   Tue Nov 22 03:02:13 2016 -0500
+
+    Delete player.mli
+
+ player.mli | 28 ----------------------------
+ 1 file changed, 28 deletions(-)
+
+commit c8cce4963689b89c5976175c1c2baaa49f7f538b
+Author: Ritwik Dan <rd389@cornell.edu>
+Date:   Tue Nov 22 03:02:04 2016 -0500
+
+    Delete player.ml
+
+ player.ml | 48 ------------------------------------------------
+ 1 file changed, 48 deletions(-)
+
+commit 4f2462874814fec3b24fa3bd2b17ad90300bc4dd
+Author: = <=>
+Date:   Tue Nov 22 03:01:17 2016 -0500
+
+    ocamlinit
+
+ .ocamlinit | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit a1a1985dea6cfdafe5ceb9b30f47d93a75be6865
+Author: Ubuntu <ubuntu@csvm>
+Date:   Tue Nov 22 02:59:33 2016 -0500
+
+    fixed a prompt
+
+ main.ml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 795dbe9eb3915eecf81e6dc459934b6a2e749989
+Author: = <=>
+Date:   Tue Nov 22 02:56:04 2016 -0500
+
+    ocamlinit and Makefile
+
+ .ocamlinit | 10 ++++++++++
+ Makefile   |  5 +++++
+ 2 files changed, 15 insertions(+)
+
+commit 7080f3001fb19d695fbe3ae7fed2aa6e75a3dde5
+Author: Ubuntu <ubuntu@csvm>
+Date:   Tue Nov 22 02:54:05 2016 -0500
+
+    finally everything compiles
+
+ game.ml     |  2 +-
+ game.mli    |  4 ++--
+ main.ml     | 24 +++++++++++++++---------
+ players.ml  | 48 ++++++++++++++++++++++++++++++++++++++++++++++++
+ players.mli | 27 +++++++++++++++++++++++++++
+ state.ml    |  2 +-
+ state.mli   |  6 +++---
+ 7 files changed, 97 insertions(+), 16 deletions(-)
+
+commit ccf677681d10ea213c37dac0d44b026a8319e20a
+Author: Ubuntu <ubuntu@csvm>
+Date:   Tue Nov 22 01:04:14 2016 -0500
+
+    fixed inputs of Game.play
+
+ game.ml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 11eab57812cd6ad0fc6bd2d721921428ad3a1f51
+Author: Ubuntu <ubuntu@csvm>
+Date:   Tue Nov 22 00:58:04 2016 -0500
+
+    miniion
+
+ state.ml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit f973d34edd7420b31c5e81cf5461f3afaee095e3
+Author: Ubuntu <ubuntu@csvm>
+Date:   Tue Nov 22 00:33:10 2016 -0500
+
+    fixed module dependencies, added state.ml and state.mli
+
+ game.ml    | 39 ++-------------------------------------
+ game.mli   | 55 +++----------------------------------------------------
+ player.ml  |  2 +-
+ player.mli |  4 +++-
+ state.ml   | 48 ++++++++++++++++++++++++++++++++++++++++++++++++
+ state.mli  | 51 +++++++++++++++++++++++++++++++++++++++++++++++++++
+ 6 files changed, 108 insertions(+), 91 deletions(-)
+
+commit b73f9e6e3ff87a3961deadaa071623803e2cc822
+Author: Ubuntu <ubuntu@csvm>
+Date:   Wed Nov 9 16:10:48 2016 -0500
+
+    made some .mli changes
+
+ game.mli       |  19 +++++++++++--------
+ interfaces.zip | Bin 1617 -> 1618 bytes
+ 2 files changed, 11 insertions(+), 8 deletions(-)
+
+commit 428514239ecd45686169eae90bbd5b61c4d196bb
+Author: Ubuntu <ubuntu@csvm>
+Date:   Wed Nov 9 14:20:49 2016 -0500
+
+    zipped the mli's for submission in MS1
+
+ interfaces.zip | Bin 0 -> 1617 bytes
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+
+commit dcaa9ac3d175051eb59749e7de5459973a41b0f7
+Author: Ubuntu <ubuntu@csvm>
+Date:   Tue Nov 8 18:10:42 2016 -0500
+
+    added skeleton code for the remaining .ml files, changed part of player.mli
+
+ game.ml    | 44 ++++++++++++++++++++++++++++++++++++++++++++
+ player.ml  | 48 ++++++++++++++++++++++++++++++++++++++++++++++++
+ player.mli |  2 ++
+ 3 files changed, 94 insertions(+)
+
+commit 4502f81c6739ad39e2b3270a3fe984838e9c0b4d
+Author: Ubuntu <ubuntu@csvm>
+Date:   Tue Nov 8 17:51:47 2016 -0500
+
+    wrote mli files for main, game, and player, and started writing main.ml
+
+ game.mli   | 56 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ main.ml    | 13 +++++++++++++
+ main.mli   |  3 +++
+ player.mli | 24 ++++++++++++++++++++++++
+ 4 files changed, 96 insertions(+)
