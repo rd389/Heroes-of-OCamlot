@@ -650,6 +650,29 @@ struct
               | Mana -> (play_spell st {sp with target = Me})
              )
 
+  let rec cant_play mana h =
+    match h with
+    | [] -> []
+    | c::t -> if c.cost > mana then c::(cant_play mana t) else cant_play mana t
+
+  let rec manahand ai h =
+      match h with
+      | [] -> []
+      | c::t -> match c.cat with
+                | Spell sp -> if sp.effect = Mana && (sp.mag-c.cost)>0 then (
+                              let cantplay1 = cant_play ai.mana ai.hand in
+                              let cantplay2 = cant_play (ai.mana+sp.mag-c.cost) ai.hand in
+                              if (List.length cantplay1) > (List.length cantplay2)
+                              then c::(manahand ai t)
+                              else manahand ai t
+                              ) else manahand ai t
+                | _ -> manahand ai t
+
+  let card_compare c1 c2 =
+    if c1.cost>c2.cost then 1
+    else if c1.cost=c2.cost then 0
+    else (-1)
+
   (* [play_card st hand] returns the state after the AI plays cards in its hand
    * [hand] in state [st]. *)
   let rec play_card st hand =
@@ -697,16 +720,22 @@ struct
                              )
               )
 
+  let sort_hand h =
+    List.sort card_compare h |> List.rev
 
   let pre_phase st =
     if st.first_player then failwith "Error"
     else
     let pre_st = start_turn st in
     print_state {pre_st with first_player = true};
-    let ai = snd st.players in
+    let ai = snd pre_st.players in
     print_endline "AI is thinking...";
     Unix.sleep(5);
-    play_card pre_st ai.hand
+    let manas = manahand ai ai.hand in
+    let handminusmanas = List.filter (fun c -> not (List.mem c manas)) ai.hand |> sort_hand in
+    let new_hand = manas@handminusmanas in
+    let new_ai = {ai with hand = new_hand} in
+    play_card {pre_st with players = (fst pre_st.players, new_ai)} new_ai.hand
 
   let attack_phase st =
     let player = ref (snd st.players) in
