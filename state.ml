@@ -140,8 +140,8 @@ let print_state st =
   if List.length plyr.minions = 0 then print_endline "none"
     else print_minionlist plyr.minions;
   print_endline "\n";
-  print_endline ("Oppenent's HP: " ^ (string_of_int other_plyr.hp));
-  print_endline ("Oppenent's Armor: " ^ (string_of_int other_plyr.armor));
+  print_endline ("Opponent's HP: " ^ (string_of_int other_plyr.hp));
+  print_endline ("Opponent's Armor: " ^ (string_of_int other_plyr.armor));
   print_string "Opponent's equipped weapon: ";
   let () = match other_plyr.weap with
            | None -> print_endline "none"
