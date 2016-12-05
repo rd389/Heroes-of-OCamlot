@@ -1,0 +1,309 @@
+{
+  "minions":
+  [{
+    "name": "Druke",
+    "desc": "Alcoholic frat star and best GM in recent history",
+    "cost": 6,
+    "attack": 5,
+    "health": 9,
+    "bonus": [{
+      "effect": "armor",
+      "amount": 5
+      }]
+  },
+  {
+    "name": "Charmin Ultra Soft",
+    "desc": "The younger Daniels aka Luke's bitch",
+    "cost": 3,
+    "attack": 3,
+    "health": 5,
+    "bonus": [{
+      "effect": "attack",
+      "amount": 2
+      }]
+  },
+  {
+    "name": "El Penguino",
+    "desc": "Don't let his retardedness fool you - surprisingly competent",
+    "cost": 5,
+    "attack": 4,
+    "health": 10,
+    "bonus" : [{
+      "effect": "heal",
+      "amount": 3
+      }]
+  },
+  {
+    "name": "Haymine",
+    "desc": "Don't feed it any Xanax.",
+    "cost": 2,
+    "attack": 1,
+    "health": 15,
+    "bonus": [{
+       "effect": "armor",
+       "amount": 1
+      }]
+  },
+  {
+    "name": "Titwik",
+    "desc": "I just fucked your girl in some gucci flip flops",
+    "cost": 7,
+    "attack": 9,
+    "health": 11,
+    "bonus": [{
+       "effect": "attack",
+       "amount": 2},
+      {"effect": "armor",
+       "amount": 2},
+      {"effect": "heal",
+       "amount": 2
+      }]
+  },
+  {
+    "name": "Investigate 3/11",
+    "desc": "Funnel Funnel Funnel Funnel Funnel",
+    "cost": 3,
+    "attack": 3,
+    "health": 11,
+    "bonus": [{
+       "effect": "armor",
+       "amount": 3
+      }]
+  },
+  {
+    "name": "Gus",
+    "desc": "Feed him drugs to keep him alive",
+    "cost": 5,
+    "attack": 8,
+    "health": 2,
+    "bonus": [{
+       "effect": "attack",
+       "amount": 5
+      }]
+  },
+  {
+    "name": "Lofty",
+    "desc": "Cannibalism is only okay if we're eating Blake",
+    "cost": 8,
+    "attack": 10,
+    "health": 25,
+    "bonus": [{
+      "effect": "armor",
+      "amount": 3
+      },{
+      "effect": "heal",
+      "amount": 3
+      },{
+      "effect": "attack",
+      "amount": 3
+      }]
+  },
+  {
+    "name": "Skitzo",
+    "desc": "The dumbest smart kid you've ever met",
+    "cost": 6,
+    "attack": 13,
+    "health": 5,
+    "bonus": [{
+       "effect": "attack",
+       "amount": 4
+      }]
+  },
+  {
+    "name": "Jah",
+    "desc": "Keep away from fire extinguishers",
+    "cost": 7,
+    "attack": 11,
+    "health": 9,
+    "bonus": []
+  },
+  {
+    "name": "Bird lips",
+    "desc": "Skilled at handling small white balls",
+    "cost": 6,
+    "attack": 10,
+    "health": 8,
+    "bonus": [{
+      "effect": "heal",
+      "amount": 2
+      },{
+      "effect": "armor",
+      "amount": 2
+      }]
+  },
+  {
+    "name": "Snake",
+    "desc": "Hssssssssssssssssssssssssssssssss",
+    "cost": 1,
+    "attack": 1,
+    "health": 12,
+    "bonus": [{
+      "effect": "attack",
+      "amount": 2
+      }]
+  },
+  {
+    "name": "Simple Jack",
+    "desc": "JACK SMASH...beer into head",
+    "cost": 4,
+    "attack": 2,
+    "health": 14,
+    "bonus": [{
+      "effect": "armor",
+      "amount": 2
+      }]
+  },
+  {
+    "name": "Gdubs",
+    "desc": "We get it, you're good at pong",
+    "cost": 1,
+    "attack": 1,
+    "health": 12,
+    "bonus": [{
+      "effect": "heal",
+      "amount": 3
+      }]
+  },
+  {
+    "name": "Flanz",
+    "desc": "Crikey! A wild Flanz has emerged from its cave!",
+    "cost": 1,
+    "attack": 1,
+    "health": 12,
+    "bonus": [{
+      "effect": "armor",
+      "amount": 3
+      }]
+  },
+  {
+    "name": "Crab",
+    "desc": "CrabCrabCrabCrabCrab",
+    "cost": 5,
+    "attack": 5,
+    "health": 8,
+    "bonus": [{
+      "effect": "armor",
+      "amount": 4
+      }]
+  },
+  {
+    "name": "MVZ",
+    "desc": "I'll bet you a dollar...",
+    "cost": 2,
+    "attack": 3,
+    "health": 7,
+    "bonus": [{
+      "effect": "heal",
+      "amount": 3
+      }]
+  },
+  {
+    "name": "Solomon",
+    "desc": "If minions could damage themselves, this one would",
+    "cost": 6,
+    "attack": 10,
+    "health": 1,
+    "bonus": []
+  },
+  {
+    "name": "Teaf",
+    "desc": "BURN BURN BURN",
+    "cost": 14,
+    "attack": 30,
+    "health": 1,
+    "bonus": []
+  },
+  {
+    "name": "Kelland",
+    "desc": "Fuck with me",
+    "cost": 8,
+    "attack": 16,
+    "health": 8,
+    "bonus": []
+  }],
+    "spells": [
+      {
+        "name": "Xanax",
+        "desc": "Only bad things",
+        "cost": 4,
+        "targ": "all",
+        "effect": "dmg",
+        "mag": 6
+      },
+      {
+        "name": "Speed",
+        "desc": "Speedspeedspeedspeedspeed",
+        "cost": 0,
+        "targ": "me",
+        "effect": "mana",
+        "mag": 4
+      },
+      {
+        "name": "Phenibut",
+        "desc": "Soviet space drug",
+        "cost": 1,
+        "targ": "any",
+        "effect": "heal",
+        "mag": 4
+      },
+      {
+        "name": "Ambien",
+        "desc": "Sleepytiime",
+        "cost": 5,
+        "targ": "me",
+        "effect": "mana",
+        "mag": 8
+      },
+      {
+        "name": "DMT",
+        "desc": "OH BOY",
+        "cost": 1,
+        "targ": "any",
+        "effect": "dmg",
+        "mag": 3
+      },
+      {
+        "name": "Acid",
+        "desc": "Don't eat Blake",
+        "cost": 4,
+        "targ": "mine",
+        "effect": "heal",
+        "mag": 8
+      }],
+    "weapons": [
+      {
+        "name": "Funnel",
+        "desc": "Lofty would be proud",
+        "cost": 3,
+        "dmg": 4,
+        "dur": 2
+      },
+      {
+        "name": "Geeb",
+        "desc": "Hail Drave",
+        "cost": 2,
+        "dmg": 2,
+        "dur": 3
+      },
+      {
+        "name": "Fire Extinguisher",
+        "desc": "Not during a party...",
+        "cost": 4,
+        "dmg": 10,
+        "dur": 1
+      },
+      {
+        "name": "House gun",
+        "desc": "Burn it all to the ground",
+        "cost": 10,
+        "dmg": 30,
+        "dur": 1
+      },
+      {
+        "name": "Ecig",
+        "desc": "We get it you vape",
+        "cost": 1,
+        "dmg": 4,
+        "dur": 1
+      }]
+}
