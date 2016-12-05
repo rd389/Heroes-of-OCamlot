@@ -53,8 +53,8 @@ let rec bonuses l =
   | (eff,mag)::t -> let b = (match eff with
                             | Armor -> ("Ar +" ^ (string_of_int mag))
                             | HealM -> ("Hp +" ^ (string_of_int mag))
-                            | Attack -> ("Att " ^ (string_of_int mag))) in
-                    b ^ (bonuses t)
+                            | Attack -> ("Att +" ^ (string_of_int mag))) in
+                    if t <> [] then b ^ "; " ^ (bonuses t) else b
 
 (* [print_bonuses l] sequentially prints the bonuses in list [l], with new lines
  * and indents after each bonus. *)
@@ -75,8 +75,8 @@ let rec print_minionlist l =
   | c::t -> let m = (match c.cat with | Minion min -> min
                                       | _ -> failwith "Sum Ting Wong") in
             print_endline (c.name ^ ":");
-            print_endline ("  HP = " ^ (string_of_int m.hp));
             print_endline ("  Attack = " ^ (string_of_int m.attack));
+            print_endline ("  HP = " ^ (string_of_int m.hp));
             print_endline ("  Bonuses:");
             print_bonuses m.bonus;
             print_minionlist t

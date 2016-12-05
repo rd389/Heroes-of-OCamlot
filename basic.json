@@ -1,28 +1,34 @@
 {
   "minions" : [{
-    "name" : "Meyers",
-    "desc" : "1 attack; 21 HP; +2 armor.",
-    "cost" : 2,
-    "attack" : 1,
-    "health" : 21,
+    "name" : "Piazza",
+    "desc" : "I swear I'm helping.",
+    "cost" : 4,
+    "attack" : 2,
+    "health" : 50,
     "bonus" : [{
       "effect" : "armor",
       "amount" : 2
     }]
   }],
   "spells" : [{
-    "name" : "Snake",
-    "desc" : "+5 mana. Oh boy.",
-    "cost" : 4,
+    "name" : "Project deadline extension",
+    "desc" : "Well that was unexpected.",
+    "cost" : 2,
     "targ" : "me",
-    "effect" : "mana",
-    "mag" : 5
+    "effect" : "heal",
+    "mag" : 5},
+   {"name" : "Chirag",
+    "desc" : "Your only hope of survival.",
+    "cost" : 5,
+    "targ" : "mine",
+    "effect" : "heal",
+    "mag" : 10
   }],
   "weapons" : [{
-    "name" : "Funnel",
-    "desc" : "3 damage; 69 durability. The name says it all.",
-    "cost" : 4,
+    "name" : "Code",
+    "desc" : "You can do it!",
+    "cost" : 1,
     "dmg" : 3,
-    "dur" : 69
+    "dur" : 100
   }]
 }
