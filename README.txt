@@ -68,6 +68,11 @@ applied to your hero (heal, attack, or armor).  Next, the player is prompted to
 provide a target for each of their minions in play, as well as the hero itself
 if it has any attack damage.
 
+NOTE: The following game-specific notation is used to display a minion's current 
+health and attack:
+"Attack/HP" where Attack and HP are ints, followed by the name of the corresponding
+minion.
+
 When one of your characters attacks a target, which can be any of the opponent's
 minions on the board or your opponent themselves (player 1 and player 2 targeted
 by typing P1 and P2 respectively), the target is dealt damage equal to the
